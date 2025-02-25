@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
                     Greeting(
                         name = "Android",
                         modifier = Modifier.padding(innerPadding)
-                        //cambio 1
+                        //cambio 2
 
                     )
                 }
