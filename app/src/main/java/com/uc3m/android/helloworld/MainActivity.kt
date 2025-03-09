@@ -4,18 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.uc3m.android.helloworld.ui.theme.HelloWorldTheme
-import androidx.compose.ui.res.stringResource
-import android.util.Log
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.Button
+import com.uc3m.android.helloworld.screens.LoginScreen
+import com.uc3m.android.helloworld.screens.SignUpScreen
+import com.uc3m.android.helloworld.screens.HomeScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,37 +18,13 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             HelloWorldTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                        //hola lu
-
-                    )
+                val navController = rememberNavController()
+                NavHost(navController, startDestination = "login") {
+                    composable("login") { LoginScreen(navController) }
+                    composable("home") { HomeScreen() }
+                    composable("signup") { SignUpScreen(navController) }
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Column(modifier = modifier) {
-        Text(
-            text = stringResource(R.string.hello, name),
-        )
-        Button(onClick = {
-            Log.d("MainActivity", "Button clicked!")
-        }) {
-            Text("Click Me!")
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    HelloWorldTheme {
-        Greeting("Android")
     }
 }
