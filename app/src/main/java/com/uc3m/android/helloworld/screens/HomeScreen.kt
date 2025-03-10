@@ -6,9 +6,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.compose.foundation.clickable
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavHostController) {
     Surface(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -17,7 +19,7 @@ fun HomeScreen() {
         ) {
             Text(text = "Welcome to StudyStorm", fontSize = 24.sp)
             Spacer(modifier = Modifier.height(20.dp))
-            Button(onClick = {  }) {
+            Button(onClick = { navController.navigate("subjects") }) {
                 Text("Subjects")
             }
             Spacer(modifier = Modifier.height(10.dp))
