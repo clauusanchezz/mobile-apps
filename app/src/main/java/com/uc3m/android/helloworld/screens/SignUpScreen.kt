@@ -15,6 +15,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.compose.ui.platform.LocalContext
 import android.widget.Toast
+import androidx.compose.foundation.background
+import androidx.compose.ui.graphics.Color
 
 @Composable
 fun SignUpScreen(navController: NavHostController) {
@@ -74,13 +76,13 @@ fun SignUpScreen(navController: NavHostController) {
     }
 
 
-    Surface(modifier = Modifier.fillMaxSize()) {
+    Surface(modifier = Modifier.fillMaxSize().background(Color(0xFFFF9966)), color = Color(0xFFFF9966)) {
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "Create Account", fontSize = 28.sp, style = MaterialTheme.typography.headlineMedium)
+            Text(text = "Create Account", fontSize = 30.sp, style = MaterialTheme.typography.headlineMedium)
             Spacer(modifier = Modifier.height(30.dp))
             OutlinedTextField(value = username, onValueChange = { username = it }, label = { Text("Username*") }, modifier = Modifier.fillMaxWidth(0.8f), shape = RoundedCornerShape(10.dp))
             Spacer(modifier = Modifier.height(10.dp))

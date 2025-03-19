@@ -11,10 +11,16 @@ import com.uc3m.android.helloworld.ui.theme.HelloWorldTheme
 import com.uc3m.android.helloworld.screens.LoginScreen
 import com.uc3m.android.helloworld.screens.SignUpScreen
 import com.uc3m.android.helloworld.screens.HomeScreen
+import com.uc3m.android.helloworld.screens.MotivationStrategyScreen
 import com.uc3m.android.helloworld.screens.OfflineModeScreen
+import com.uc3m.android.helloworld.screens.PrepExams
+import com.uc3m.android.helloworld.screens.ProjectsPreparationScreen
 import com.uc3m.android.helloworld.screens.StudyProgressScreen
 import com.uc3m.android.helloworld.screens.SubjectScreen
 import com.uc3m.android.helloworld.screens.StudyPlansScreen
+import com.uc3m.android.helloworld.screens.ReviewClarificationScreen
+import com.uc3m.android.helloworld.screens.TimeManagementScreen
+import com.uc3m.android.helloworld.screens.WorkingInTeamsScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,6 +37,14 @@ class MainActivity : ComponentActivity() {
                     composable("study_plans") { StudyPlansScreen(navController) }
                     composable("study_progress") { StudyProgressScreen(navController) }
                     composable("offline_mode") { OfflineModeScreen(navController)}
+                    composable("study_plans") { StudyPlansScreen(navController) }
+                    //composable("personalized_plan") { PersonalizedStudyPlanScreen() }
+                    composable("exams_preparation") { PrepExams(navController) }
+                    composable("projects_preparation") { ProjectsPreparationScreen(navController) }
+                    composable("review_clarification") { ReviewClarificationScreen(navController) }
+                    composable("motivation_strategy") { MotivationStrategyScreen(navController) }
+                    composable("working_in_teams") { WorkingInTeamsScreen(navController) }
+                    composable("time_management") { TimeManagementScreen(navController) }
                 }
             }
         }
