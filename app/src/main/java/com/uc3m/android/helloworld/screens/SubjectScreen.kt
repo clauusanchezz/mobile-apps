@@ -17,20 +17,22 @@ import androidx.navigation.NavController
 
 @Composable
 fun SubjectScreen(navController: NavController) {
-    Surface(modifier = Modifier.fillMaxSize(), color = Color(0xFFF7F7F7)) { // Light background color
+    Surface(modifier = Modifier.fillMaxSize(), color = Color(0xFFFF9966)) { // Light background color
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 20.dp), // Padding on the sides to avoid edges touching the screen
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally
+            //verticalArrangement = Arrangement.Top,
+            //horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
             // Title with larger font size and bold for more emphasis
             Text(
                 text = "Subjects",
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF000000), // Orange color for the title
+                color = Color(0xFF000000), // color for the title
             )
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -62,7 +64,7 @@ fun SubjectButton(subjectName: String, onClick: () -> Unit) {
             .height(60.dp) // Bigger height for buttons
             .padding(vertical = 8.dp), // Vertical padding between buttons
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color(0xFFFF6F00), // Orange button color
+            containerColor = Color(0xFFfc4b08), // Orange button color
             contentColor = Color.White // Black text color for buttons
         ),
         shape = RoundedCornerShape(16.dp), // Rounded corners for buttons

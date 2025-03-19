@@ -33,7 +33,7 @@ fun StudyProgressScreen(navController: NavController) {
     )
 
     // Contenedor principal
-    Surface(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+    Surface(modifier = Modifier.fillMaxSize().background(Color(0xFFFF9966)).padding(16.dp), color = Color(0xFFFF9966)) {
         Column(modifier = Modifier.fillMaxSize()) {
             Text(
                 text = "Study Progress",

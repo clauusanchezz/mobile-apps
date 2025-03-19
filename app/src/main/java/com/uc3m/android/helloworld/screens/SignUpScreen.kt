@@ -1,5 +1,7 @@
 package com.uc3m.android.helloworld.screens
 
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,6 +17,8 @@ import androidx.compose.ui.platform.LocalContext
 import com.uc3m.android.helloworld.auth.FirebaseAuthHelper
 import android.widget.Toast
 import kotlinx.coroutines.launch
+import androidx.compose.foundation.background
+import androidx.compose.ui.graphics.Color
 
 @Composable
 fun SignUpScreen(navController: NavHostController) {
@@ -65,13 +69,13 @@ fun SignUpScreen(navController: NavHostController) {
         }
     }
 
-    Surface(modifier = Modifier.fillMaxSize()) {
+    Surface(modifier = Modifier.fillMaxSize().background(Color(0xFFFF9966)), color = Color(0xFFFF9966)) {
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "Create Account", fontSize = 28.sp, style = MaterialTheme.typography.headlineMedium)
+            Text(text = "Create Account", fontSize = 30.sp, style = MaterialTheme.typography.headlineMedium)
             Spacer(modifier = Modifier.height(30.dp))
             OutlinedTextField(
                 value = username,
@@ -122,6 +126,7 @@ fun SignUpScreen(navController: NavHostController) {
                     Text(text = "Sign Up")
                 }
             }
+
             Spacer(modifier = Modifier.height(10.dp))
             Row(modifier = Modifier.clickable { navController.navigate("login") }) {
                 Text(text = "Already a member?")

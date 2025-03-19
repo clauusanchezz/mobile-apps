@@ -1,6 +1,7 @@
 package com.uc3m.android.helloworld.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -17,17 +18,17 @@ import androidx.navigation.NavController
 fun StudyPlansScreen(navController: NavController) {
     // Lista de planes de estudio predefinidos
     val studyPlans = listOf(
-        "My personalized Study Plan",
-        "Preparation of Exams",
-        "Projects' Preparation",
-        "Review and clarification",
-        "Motivation Strategy",
-        "Working in Teams",
-        "Time Management"
+        "My personalized Study Plan" to "personalized_plan", // Asociar nombre y destino
+        "Preparation of Exams" to "exams_preparation",
+        "Projects' Preparation" to "projects_preparation",
+        "Review and clarification" to "review_clarification",
+        "Motivation Strategy" to "motivation_strategy",
+        "Working in Teams" to "working_in_teams",
+        "Time Management" to "time_management"
     )
 
     // Contenedor principal
-    Surface(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+    Surface(modifier = Modifier.fillMaxSize().background(Color(0xFFFF9966)).padding(16.dp), color = Color(0xFFFF9966)) {
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -47,8 +48,8 @@ fun StudyPlansScreen(navController: NavController) {
                     .padding(vertical = 16.dp),
                 contentPadding = PaddingValues(vertical = 8.dp)
             ) {
-                items(studyPlans) { plan ->
-                    StudyPlanItem(plan = plan)
+                items(studyPlans) { (plan, destination) -> // Destino de la pantalla como segundo valor
+                    StudyPlanItem(plan = plan, onClick = { navController.navigate(destination) })
                     Spacer(modifier = Modifier.height(16.dp)) // Separador entre planes
                 }
             }
@@ -57,10 +58,13 @@ fun StudyPlansScreen(navController: NavController) {
 }
 
 @Composable
-fun StudyPlanItem(plan: String) {
-    // Contenedor para cada plan de estudio
+fun StudyPlanItem(plan: String, onClick: () -> Unit) {
+    // Contenedor para cada plan de estudio, con navegación al hacer clic
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick), // Maneja la acción de clic
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFfc4b08))
     ) {
         Row(
             modifier = Modifier
@@ -72,7 +76,7 @@ fun StudyPlanItem(plan: String) {
             Text(
                 text = plan,
                 fontSize = 18.sp,
-                color = Color.Black
+                color = Color.White
             )
         }
     }
