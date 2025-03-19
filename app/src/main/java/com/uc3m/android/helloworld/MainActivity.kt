@@ -11,7 +11,10 @@ import com.uc3m.android.helloworld.ui.theme.HelloWorldTheme
 import com.uc3m.android.helloworld.screens.LoginScreen
 import com.uc3m.android.helloworld.screens.SignUpScreen
 import com.uc3m.android.helloworld.screens.HomeScreen
+import com.uc3m.android.helloworld.screens.OfflineModeScreen
+import com.uc3m.android.helloworld.screens.StudyProgressScreen
 import com.uc3m.android.helloworld.screens.SubjectScreen
+import com.uc3m.android.helloworld.screens.StudyPlansScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,10 +25,12 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 NavHost(navController, startDestination = "login") {
                     composable("login") { LoginScreen(navController) }
-                    composable("home") { HomeScreen() }
+                    composable("home") { HomeScreen(navController) }
                     composable("signup") { SignUpScreen(navController) }
                     composable("subjects") { SubjectScreen(navController) }
-
+                    composable("study_plans") { StudyPlansScreen(navController) }
+                    composable("study_progress") { StudyProgressScreen(navController) }
+                    composable("offline_mode") { OfflineModeScreen(navController)}
                 }
             }
         }
