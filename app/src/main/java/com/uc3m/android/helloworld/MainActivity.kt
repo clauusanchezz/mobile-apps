@@ -11,6 +11,7 @@ import com.uc3m.android.helloworld.ui.theme.HelloWorldTheme
 import com.uc3m.android.helloworld.screens.LoginScreen
 import com.uc3m.android.helloworld.screens.SignUpScreen
 import com.uc3m.android.helloworld.screens.HomeScreen
+import com.uc3m.android.helloworld.screens.SubjectScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,6 +24,8 @@ class MainActivity : ComponentActivity() {
                     composable("login") { LoginScreen(navController) }
                     composable("home") { HomeScreen() }
                     composable("signup") { SignUpScreen(navController) }
+                    composable("subjects") { SubjectScreen(navController) }
+
                 }
             }
         }
