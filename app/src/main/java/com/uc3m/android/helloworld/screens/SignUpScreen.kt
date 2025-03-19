@@ -77,38 +77,97 @@ fun SignUpScreen(navController: NavHostController) {
         ) {
             Text(text = "Create Account", fontSize = 30.sp, style = MaterialTheme.typography.headlineMedium)
             Spacer(modifier = Modifier.height(30.dp))
+
+            //Username field
             OutlinedTextField(
                 value = username,
                 onValueChange = { username = it },
                 label = { Text("Username*") },
-                modifier = Modifier.fillMaxWidth(0.8f),
-                shape = RoundedCornerShape(10.dp)
+                modifier = Modifier
+                    .fillMaxWidth(0.8f)
+                    .padding(horizontal = 16.dp),
+                shape = RoundedCornerShape(10.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color.White,
+                    unfocusedBorderColor = Color.White,
+                    focusedLabelColor = Color.White,
+                    unfocusedLabelColor = Color.White,
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White,
+                    cursorColor = Color.White,
+                    focusedContainerColor = Color.White.copy(alpha = 0.1f),
+                    unfocusedContainerColor = Color.White.copy(alpha = 0.1f)
+                )
             )
             Spacer(modifier = Modifier.height(10.dp))
+
+            //email field
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
                 label = { Text("Email*") },
-                modifier = Modifier.fillMaxWidth(0.8f),
-                shape = RoundedCornerShape(10.dp)
+                modifier = Modifier
+                    .fillMaxWidth(0.8f)
+                    .padding(horizontal = 16.dp),
+                shape = RoundedCornerShape(10.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color.White,
+                    unfocusedBorderColor = Color.White,
+                    focusedLabelColor = Color.White,
+                    unfocusedLabelColor = Color.White,
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White,
+                    cursorColor = Color.White,
+                    focusedContainerColor = Color.White.copy(alpha = 0.1f),
+                    unfocusedContainerColor = Color.White.copy(alpha = 0.1f)
+                )
             )
             Spacer(modifier = Modifier.height(10.dp))
+
+            //password field
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
                 label = { Text("Password*") },
                 visualTransformation = PasswordVisualTransformation(),
-                modifier = Modifier.fillMaxWidth(0.8f),
-                shape = RoundedCornerShape(10.dp)
+                modifier = Modifier
+                    .fillMaxWidth(0.8f)
+                    .padding(horizontal = 16.dp),
+                shape = RoundedCornerShape(10.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color.White,
+                    unfocusedBorderColor = Color.White,
+                    focusedLabelColor = Color.White,
+                    unfocusedLabelColor = Color.White,
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White,
+                    cursorColor = Color.White,
+                    focusedContainerColor = Color.White.copy(alpha = 0.1f),
+                    unfocusedContainerColor = Color.White.copy(alpha = 0.1f)
+                )
             )
             Spacer(modifier = Modifier.height(10.dp))
+            
             OutlinedTextField(
                 value = confirmPassword,
                 onValueChange = { confirmPassword = it },
                 label = { Text("Confirm Password*") },
                 visualTransformation = PasswordVisualTransformation(),
-                modifier = Modifier.fillMaxWidth(0.8f),
-                shape = RoundedCornerShape(10.dp)
+                modifier = Modifier
+                    .fillMaxWidth(0.8f)
+                    .padding(horizontal = 16.dp),
+                shape = RoundedCornerShape(10.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color.White,
+                    unfocusedBorderColor = Color.White,
+                    focusedLabelColor = Color.White,
+                    unfocusedLabelColor = Color.White,
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White,
+                    cursorColor = Color.White,
+                    focusedContainerColor = Color.White.copy(alpha = 0.1f),
+                    unfocusedContainerColor = Color.White.copy(alpha = 0.1f)
+                )
             )
             Spacer(modifier = Modifier.height(20.dp))
             Button(

@@ -20,6 +20,7 @@ import com.uc3m.android.helloworld.auth.FirebaseAuthHelper
 import android.widget.Toast
 import kotlinx.coroutines.launch
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 
 @Composable
 fun LoginScreen(navController: NavHostController) {
@@ -81,7 +82,7 @@ fun LoginScreen(navController: NavHostController) {
             }
             
             Text(
-                text = "STUDYSTORM",
+                text = "Welcome Back Learner!",
                 fontSize = 25.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
@@ -99,7 +100,18 @@ fun LoginScreen(navController: NavHostController) {
                 modifier = Modifier
                     .fillMaxWidth(0.8f)
                     .padding(horizontal = 16.dp),
-                shape = RoundedCornerShape(10.dp)
+                shape = RoundedCornerShape(10.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color.White,
+                    unfocusedBorderColor = Color.White,
+                    focusedLabelColor = Color.White,
+                    unfocusedLabelColor = Color.White,
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White,
+                    cursorColor = Color.White,
+                    focusedContainerColor = Color.White.copy(alpha = 0.1f),
+                    unfocusedContainerColor = Color.White.copy(alpha = 0.1f)
+                )
             )
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -113,7 +125,18 @@ fun LoginScreen(navController: NavHostController) {
                 modifier = Modifier
                     .fillMaxWidth(0.8f)
                     .padding(horizontal = 16.dp),
-                shape = RoundedCornerShape(10.dp)
+                shape = RoundedCornerShape(10.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color.White,
+                    unfocusedBorderColor = Color.White,
+                    focusedLabelColor = Color.White,
+                    unfocusedLabelColor = Color.White,
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White,
+                    cursorColor = Color.White,
+                    focusedContainerColor = Color.White.copy(alpha = 0.1f),
+                    unfocusedContainerColor = Color.White.copy(alpha = 0.1f)
+                )
             )
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -145,7 +168,13 @@ fun LoginScreen(navController: NavHostController) {
             ) {
                 Text(text = "Not a member?")
                 Spacer(modifier = Modifier.width(4.dp))
-                Text(text = "Sign up", color = Color.White)
+                Text(
+                    text = "Sign up",
+                    color = Color.White,
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        textDecoration = TextDecoration.Underline
+                    )
+                )
             }
 
             Spacer(modifier = Modifier.height(32.dp))
