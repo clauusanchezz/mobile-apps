@@ -35,7 +35,7 @@ fun SubjectScreen(navController: NavHostController) {
             }
             Spacer(modifier = Modifier.height(10.dp))
             Button(onClick = { }) {
-                Text("French")
+                Text("ICT")
             }
         }
     }
