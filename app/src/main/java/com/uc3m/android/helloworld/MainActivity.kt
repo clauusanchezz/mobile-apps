@@ -38,7 +38,6 @@ class MainActivity : ComponentActivity() {
                     composable("study_progress") { StudyProgressScreen(navController) }
                     composable("offline_mode") { OfflineModeScreen(navController)}
                     composable("study_plans") { StudyPlansScreen(navController) }
-                    //composable("personalized_plan") { PersonalizedStudyPlanScreen() }
                     composable("exams_preparation") { PrepExams(navController) }
                     composable("projects_preparation") { ProjectsPreparationScreen(navController) }
                     composable("review_clarification") { ReviewClarificationScreen(navController) }

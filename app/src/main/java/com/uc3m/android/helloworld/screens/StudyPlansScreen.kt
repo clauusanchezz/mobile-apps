@@ -10,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -18,7 +19,6 @@ import androidx.navigation.NavController
 fun StudyPlansScreen(navController: NavController) {
     // Lista de planes de estudio predefinidos
     val studyPlans = listOf(
-        "My personalized Study Plan" to "personalized_plan", // Asociar nombre y destino
         "Preparation of Exams" to "exams_preparation",
         "Projects' Preparation" to "projects_preparation",
         "Review and clarification" to "review_clarification",
