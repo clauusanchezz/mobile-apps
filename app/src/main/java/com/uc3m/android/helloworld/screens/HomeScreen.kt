@@ -21,10 +21,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.uc3m.android.helloworld.R
+import com.uc3m.android.helloworld.utils.SoundManager
+import androidx.compose.ui.platform.LocalContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavController) {
+    val context = LocalContext.current
+    val soundManager = remember { SoundManager(context) }
     val orangeColor = Color(0xFFfc4b08) // Naranja para los botones
     val whiteColor = Color(0xFFFFFFFF) // Blanco para el fondo
     val blackColor = Color(0xFF000000) // Negro para el título
@@ -90,6 +94,7 @@ fun HomeScreen(navController: NavController) {
                                 text = { Text("Logout") },
                                 onClick = { 
                                     showMenu = false
+                                    soundManager.playNotificationSound()
                                     navController.navigate("login") {
                                         popUpTo("home") { inclusive = true }
                                     }
