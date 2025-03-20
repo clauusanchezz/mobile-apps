@@ -59,7 +59,7 @@ fun HomeScreen(navController: NavController) {
                             onDismissRequest = { showMenu = false }
                         ) {
                             DropdownMenuItem(
-                                text = { Text("Profile Settings") },
+                                text = { Text("Profile Settings ") },
                                 onClick = { 
                                     showMenu = false
                                     // TODO: Navigate to profile settings
