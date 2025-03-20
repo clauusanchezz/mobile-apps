@@ -19,6 +19,7 @@ import android.widget.Toast
 import kotlinx.coroutines.launch
 import androidx.compose.foundation.background
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 
 @Composable
 fun SignUpScreen(navController: NavHostController) {
@@ -75,7 +76,23 @@ fun SignUpScreen(navController: NavHostController) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "Create Account", fontSize = 30.sp, style = MaterialTheme.typography.headlineMedium)
+            Text(
+                text = "STUDYSTORM",
+                fontSize = 40.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White,
+                style = MaterialTheme.typography.headlineLarge,
+                modifier = Modifier.padding(top = 30.dp)
+            )
+            Text(
+                text = "Create Account",
+                fontSize = 27.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFFfc4b08),
+                style = MaterialTheme.typography.headlineLarge,
+                modifier = Modifier.padding(top = 30.dp)
+            )
+            //Text(text = "Create Account", fontSize = 30.sp, style = MaterialTheme.typography.headlineMedium)
             Spacer(modifier = Modifier.height(30.dp))
 
             //Username field
@@ -190,7 +207,7 @@ fun SignUpScreen(navController: NavHostController) {
             Row(modifier = Modifier.clickable { navController.navigate("login") }) {
                 Text(text = "Already a member?")
                 Spacer(modifier = Modifier.width(4.dp))
-                Text(text = "Sign In", color = MaterialTheme.colorScheme.primary)
+                Text(text = "Sign In", color = Color.White)
             }
         }
     }

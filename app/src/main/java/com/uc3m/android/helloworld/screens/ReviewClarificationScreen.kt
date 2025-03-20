@@ -33,7 +33,7 @@ fun ReviewClarificationScreen(navController: NavController) {
     )
 
     // Main container for the screen
-    Surface(modifier = Modifier.fillMaxSize().background(Color(0xFFFF9966)).padding(16.dp), color = Color(0xFFFF9966)) {
+    Surface(modifier = Modifier.fillMaxSize().background(Color(0xFFFFFFFF)).padding(16.dp), color = Color(0xFFFFFFFF)) {
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -85,7 +85,7 @@ fun TipItem3(tip3: String) {
     // Container for each tip
     Card(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFfc4b08)),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFF9966)),
         shape = RoundedCornerShape(8.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
