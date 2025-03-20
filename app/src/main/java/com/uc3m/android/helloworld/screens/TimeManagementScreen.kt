@@ -18,6 +18,7 @@ import androidx.navigation.NavController
 
 @Composable
 fun TimeManagementScreen(navController: NavController) {
+    val titleColor = Color(0xFFFF9966) // Naranja claro
     // List of time management tips
     val timeManagementTips = listOf(
         "⏰ Prioritize tasks: Identify the most important tasks and tackle them first.",
@@ -37,12 +38,13 @@ fun TimeManagementScreen(navController: NavController) {
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Spacer(modifier = Modifier.height(40.dp))
             // Title of the screen
             Text(
                 text = "Time Management Tips",
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black,
+                color = titleColor,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
             Spacer(modifier = Modifier.height(20.dp))
@@ -51,7 +53,7 @@ fun TimeManagementScreen(navController: NavController) {
             Text(
                 text = "Useful Tips",
                 fontSize = 24.sp,
-                color = Color.Black,
+                color = titleColor,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
             Spacer(modifier = Modifier.height(20.dp))

@@ -20,6 +20,7 @@ import androidx.navigation.compose.rememberNavController
 
 @Composable
 fun PrepExams(navController: NavController) {
+    val titleColor = Color(0xFFFF9966) // Naranja claro
     // List of tips with emojis
     val tips = listOf(
         "📅 Plan your time: Organize a study calendar",
@@ -40,23 +41,24 @@ fun PrepExams(navController: NavController) {
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Spacer(modifier = Modifier.height(40.dp))
             // Title of the screen
             Text(
                 text = "Preparation of Exams",
                 fontSize = 32.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
+                fontWeight = FontWeight.ExtraBold,
+                color = titleColor
             )
-            Spacer(modifier = Modifier.height(20.dp))
 
-            // Title of the tips list
+            Spacer(modifier = Modifier.height(24.dp))
+
             Text(
                 text = "Useful Tips",
                 fontSize = 24.sp,
-                color = Color.Black,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
+                fontWeight = FontWeight.Bold,
+                color = titleColor
             )
+
             Spacer(modifier = Modifier.height(20.dp))
 
             // List of tips

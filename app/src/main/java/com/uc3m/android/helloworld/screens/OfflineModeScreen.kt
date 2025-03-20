@@ -14,53 +14,69 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OfflineModeScreen(navController: NavController?) {
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = Color(0xFFFFFFFF) // Fondo blanco
-    ) {
-        Column(
+    val naranjitafondo = Color(0xFFFF9966) // Naranja claro
+    val whiteColor = Color(0xFFFFFFFF) // Blanco para el texto
+
+    // El Scaffold tiene el topBar, el cual se utiliza para poner el título con el fondo naranja
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        "Offline Mode",
+                        fontSize = 32.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = whiteColor // Texto blanco
+                    )
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = naranjitafondo, // Fondo naranja
+                    titleContentColor = whiteColor // Título blanco
+                ),
+                modifier = Modifier.fillMaxWidth() // Asegura que ocupe toda la pantalla
+            )
+        }
+    ) { paddingValues ->
+        // El contenido de la pantalla se ajusta debajo de la barra superior
+        Surface(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top
+                .padding(paddingValues), // Para no sobreponer el contenido con la topBar
+            color = Color(0xFFFFFFFF) // Fondo blanco para el contenido
         ) {
-            Spacer(modifier = Modifier.height(40.dp))
-
-            // Título con color naranja claro
-            Text(
-                text = "Offline",
-                fontSize = 36.sp,
-                fontWeight = FontWeight.ExtraBold,
-                color = Color(0xFFFF9966), // Naranja claro
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // Lista de materias con emojis
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                contentPadding = PaddingValues(top = 16.dp, bottom = 32.dp)
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Top
             ) {
-                val subjectsWithIcons = listOf(
-                    "📐 Maths" to "Maths",
-                    "🗺️ Geography" to "Geography",
-                    "📜 History" to "History",
-                    "📖 English" to "English",
-                    "🇪🇸 Spanish" to "Spanish",
-                    "🎵 Music" to "Music",
-                    "🧬 Biology" to "Biology",
-                    "🔬 Physics" to "Physics",
-                    "🎨 Art" to "Art"
-                )
+                // Lista de materias con emojis
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    contentPadding = PaddingValues(top = 16.dp, bottom = 32.dp)
+                ) {
+                    val subjectsWithIcons = listOf(
+                        "📐 Maths" to "Maths",
+                        "🗺️ Geography" to "Geography",
+                        "📜 History" to "History",
+                        "📖 English" to "English",
+                        "🇪🇸 Spanish" to "Spanish",
+                        "🎵 Music" to "Music",
+                        "🧬 Biology" to "Biology",
+                        "🔬 Physics" to "Physics",
+                        "🎨 Art" to "Art"
+                    )
 
-                items(subjectsWithIcons.size) { index ->
-                    val (emojiSubject, subject) = subjectsWithIcons[index]
-                    OfflineButton(subjectName = emojiSubject) {
-                        // Manejo del click
+                    items(subjectsWithIcons.size) { index ->
+                        val (emojiSubject, subject) = subjectsWithIcons[index]
+                        OfflineButton(subjectName = emojiSubject) {
+                            // Manejo del click
+                        }
                     }
                 }
             }
@@ -92,4 +108,3 @@ fun OfflineButton(subjectName: String, onClick: () -> Unit) {
         )
     }
 }
-

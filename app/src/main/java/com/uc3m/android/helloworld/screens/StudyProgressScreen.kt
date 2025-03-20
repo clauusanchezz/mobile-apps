@@ -21,8 +21,10 @@ import androidx.navigation.NavController
 @Composable
 fun StudyProgressScreen(navController: NavController) {
     var showMenu by remember { mutableStateOf(false) }
-    val naranjitafondo = Color(0xFFFF9966)
+    val naranjitafondo = Color(0xFFFF9966) // Naranja claro
     val blackColor = Color(0xFF000000)
+    val whiteColor = Color(0xFFFFFFFF)
+    val orangeColor = Color(0xFFfc4b08) // Naranja del tono que mencionaste
 
     // Progreso predefinido para cada asignatura
     val subjects = listOf(
@@ -40,17 +42,17 @@ fun StudyProgressScreen(navController: NavController) {
     Scaffold(
         topBar = {
             TopAppBar(
-                //title = { Text("Study Progress") },
                 title = {
                     Text(
                         "Study Progress",
                         fontSize = 32.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        color = whiteColor
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = naranjitafondo,
-                    titleContentColor = blackColor
+                    titleContentColor = whiteColor
                 ),
                 actions = {
                     Box {
@@ -75,7 +77,7 @@ fun StudyProgressScreen(navController: NavController) {
                             )
                             DropdownMenuItem(
                                 text = { Text("Back to Home") },
-                                onClick = { 
+                                onClick = {
                                     showMenu = false
                                     navController.navigate("home") {
                                         popUpTo("study_progress") { inclusive = true }
@@ -91,12 +93,12 @@ fun StudyProgressScreen(navController: NavController) {
         Surface(
             modifier = Modifier
                 .fillMaxSize()
-                .background(naranjitafondo)
+                .background(whiteColor) // Fondo blanco
                 .padding(paddingValues),
-            color = naranjitafondo
+            color = whiteColor
         ) {
             Column(modifier = Modifier.fillMaxSize()) {
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(40.dp)) // Espacio de 40dp desde la parte superior
 
                 // LazyColumn para el desplazamiento
                 LazyColumn(
@@ -104,7 +106,7 @@ fun StudyProgressScreen(navController: NavController) {
                     contentPadding = PaddingValues(vertical = 16.dp, horizontal = 16.dp)
                 ) {
                     items(subjects) { (subject, progress) ->
-                        ProgressItem(subject = subject, progress = progress)
+                        ProgressItem(subject = subject, progress = progress, orangeColor = orangeColor)
                         Spacer(modifier = Modifier.height(16.dp))
                     }
                 }
@@ -114,11 +116,12 @@ fun StudyProgressScreen(navController: NavController) {
 }
 
 @Composable
-fun ProgressItem(subject: String, progress: Float) {
+fun ProgressItem(subject: String, progress: Float, orangeColor: Color) {
     // Contenedor de cada asignatura con el progreso
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFF9966)) // Celdas naranjitas
     ) {
         Row(
             modifier = Modifier
@@ -132,20 +135,21 @@ fun ProgressItem(subject: String, progress: Float) {
                     text = subject,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                    color = orangeColor // Nombre de la asignatura en naranja
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 LinearProgressIndicator(
-                    progress = { progress },
+                    progress = progress,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(8.dp),
+                    color = orangeColor // Barra de progreso en naranja
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = "${(progress * 100).toInt()}% Completed",
                     fontSize = 14.sp,
-                    color = Color.Gray
+                    color = Color.Black // Texto de porcentaje en negro
                 )
             }
         }
