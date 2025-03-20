@@ -21,6 +21,7 @@ import android.widget.Toast
 import kotlinx.coroutines.launch
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import com.uc3m.android.helloworld.utils.SoundManager
 
 @Composable
 fun LoginScreen(navController: NavHostController) {
@@ -31,6 +32,7 @@ fun LoginScreen(navController: NavHostController) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val authHelper = remember { FirebaseAuthHelper() }
+    val soundManager = remember { SoundManager(context) }
 
     fun handleLogin() {
         if (email.isEmpty() || password.isEmpty()) {
@@ -45,6 +47,7 @@ fun LoginScreen(navController: NavHostController) {
                 result.fold(
                     onSuccess = {
                         val username = authHelper.getCurrentUsername()
+                        soundManager.playNotificationSound()
                         Toast.makeText(context, "Welcome back, $username!", Toast.LENGTH_SHORT).show()
                         navController.navigate("home") {
                             popUpTo("login") { inclusive = true }
