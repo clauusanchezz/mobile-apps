@@ -30,7 +30,7 @@ import com.uc3m.android.helloworld.utils.SoundManager
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavController) {
-    val orangeColor = Color(0xFFfc4b08) // Naranja para los botones
+    val orangeColor = Color(0xFFfc4b08)
     val whiteColor = Color(0xFFFFFFFF) // Blanco para el fondo
     val blackColor = Color(0xFF000000) // Negro para el título
     val naranjitafondo = Color(0xFFFF9966)
