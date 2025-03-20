@@ -17,7 +17,8 @@ import androidx.navigation.NavController
 
 @Composable
 fun OfflineModeScreen(navController: NavController) {
-    Surface(modifier = Modifier.fillMaxSize(), color = Color(0xFFFF9966)) { // Light background color
+    val whiteColor = Color(0xFFFFFFFF)
+    Surface(modifier = Modifier.fillMaxSize(), color = whiteColor) { // Light background color
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -57,6 +58,7 @@ fun OfflineModeScreen(navController: NavController) {
 
 @Composable
 fun OffSubjectButton(subjectName: String, onClick: () -> Unit) {
+    val naranjitafondo = Color(0xFFFF9966)
     Button(
         onClick = onClick,
         modifier = Modifier
@@ -64,7 +66,7 @@ fun OffSubjectButton(subjectName: String, onClick: () -> Unit) {
             .height(60.dp) // Bigger height for buttons
             .padding(vertical = 8.dp), // Vertical padding between buttons
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color(0xFFfc4b08), // Orange button color
+            containerColor = naranjitafondo, // Orange button color
             contentColor = Color.White // Black text color for buttons
         ),
         shape = RoundedCornerShape(16.dp), // Rounded corners for buttons
