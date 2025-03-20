@@ -16,6 +16,7 @@ import androidx.navigation.NavController
 
 @Composable
 fun StudyPlansScreen(navController: NavController) {
+    val whiteColor = Color(0xFFFFFFFF)
     // Lista de planes de estudio predefinidos
     val studyPlans = listOf(
         "My personalized Study Plan" to "personalized_plan", // Asociar nombre y destino
@@ -28,7 +29,7 @@ fun StudyPlansScreen(navController: NavController) {
     )
 
     // Contenedor principal
-    Surface(modifier = Modifier.fillMaxSize().background(Color(0xFFFF9966)).padding(16.dp), color = Color(0xFFFF9966)) {
+    Surface(modifier = Modifier.fillMaxSize().background(whiteColor).padding(16.dp), color = whiteColor) {
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -59,12 +60,13 @@ fun StudyPlansScreen(navController: NavController) {
 
 @Composable
 fun StudyPlanItem(plan: String, onClick: () -> Unit) {
+    val naranjitafondo = Color(0xFFFF9966)
     // Contenedor para cada plan de estudio, con navegación al hacer clic
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick), // Maneja la acción de clic
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFfc4b08))
+        colors = CardDefaults.cardColors(containerColor = naranjitafondo)
     ) {
         Row(
             modifier = Modifier
