@@ -17,6 +17,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -24,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.uc3m.android.helloworld.auth.FirebaseAuthHelper
 import androidx.compose.ui.text.font.FontStyle
+import com.uc3m.android.helloworld.utils.SoundManager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,6 +39,9 @@ fun HomeScreen(navController: NavController) {
     var username by remember { mutableStateOf("") }
     val authHelper = remember { FirebaseAuthHelper() }
     val scope = rememberCoroutineScope()
+
+    val context = LocalContext.current
+    val soundManager = remember { SoundManager(context) }
 
     // Fetch username when the screen is created
     LaunchedEffect(Unit) {
@@ -119,6 +124,7 @@ fun HomeScreen(navController: NavController) {
                                 text = { Text("Logout") },
                                 onClick = {
                                     showMenu = false
+                                    soundManager.playNotificationSound()
                                     navController.navigate("login") {
                                         popUpTo("home") { inclusive = true }
                                     }
@@ -383,6 +389,15 @@ fun HomeScreen(navController: NavController) {
                                 color = blackColor,
                                 modifier = Modifier.padding(top = 12.dp)
                             )
+                            Spacer(modifier = Modifier.height(32.dp))
+                            Text(
+                                text = "Every small step takes you closer to greatness. Keep going, Learner!",
+                                fontSize = 22.sp,
+                                color = Color(0xFFFF9966),
+                                fontStyle = FontStyle.Italic,
+                                modifier = Modifier.padding(top = 12.dp)
+                            )
+                            Spacer(modifier = Modifier.height(32.dp))
                             Text(
                                 text = "Select an option:",
                                 fontSize = 18.sp,
