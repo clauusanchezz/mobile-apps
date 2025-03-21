@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -16,6 +17,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.text.style.TextAlign
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -88,6 +91,179 @@ fun StudyProgressScreen(navController: NavController) {
                     }
                 }
             )
+        },
+        bottomBar = {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp)
+                    .background(Color(0xFFF5F5F5))
+            ) {
+                NavigationBar(
+                    containerColor = Color.Transparent,
+                    contentColor = blackColor,
+                    modifier = Modifier
+                        .height(100.dp)
+                        .fillMaxWidth()
+                        .align(Alignment.BottomCenter)
+                ) {
+                    NavigationBarItem(
+                        icon = {
+                            Box(
+                                modifier = Modifier
+                                    .size(48.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(48.dp)
+                                        .background(Color(0xFFAAAAAA), CircleShape),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = "📚",
+                                        fontSize = 20.sp,
+                                        color = naranjitafondo,
+                                        textAlign = TextAlign.Center
+                                    )
+                                }
+                            }
+                        },
+                        selected = false,
+                        onClick = { navController.navigate("subjects") },
+                        label = null,
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = Color.Transparent,
+                            indicatorColor = Color.Transparent,
+                            unselectedIconColor = Color.Transparent
+                        )
+                    )
+                    NavigationBarItem(
+                        icon = {
+                            Box(
+                                modifier = Modifier
+                                    .size(48.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(48.dp)
+                                        .background(Color(0xFFAAAAAA), CircleShape),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = "📅",
+                                        fontSize = 20.sp,
+                                        color = naranjitafondo,
+                                        textAlign = TextAlign.Center
+                                    )
+                                }
+                            }
+                        },
+                        selected = false,
+                        onClick = { navController.navigate("study_plans") },
+                        label = null,
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = Color.Transparent,
+                            indicatorColor = Color.Transparent,
+                            unselectedIconColor = Color.Transparent
+                        )
+                    )
+                    NavigationBarItem(
+                        icon = {
+                            Box(
+                                modifier = Modifier
+                                    .size(48.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(48.dp)
+                                        .background(Color(0xFFAAAAAA), CircleShape),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Home,
+                                        contentDescription = "Home",
+                                        tint = Color.White,
+                                        modifier = Modifier.size(24.dp)
+                                    )
+                                }
+                            }
+                        },
+                        selected = false,
+                        onClick = { navController.navigate("home") },
+                        label = null,
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = Color.Transparent,
+                            indicatorColor = Color.Transparent,
+                            unselectedIconColor = Color.Transparent
+                        )
+                    )
+                    NavigationBarItem(
+                        icon = {
+                            Box(
+                                modifier = Modifier
+                                    .size(96.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(96.dp)
+                                        .background(naranjitafondo, CircleShape),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = "📊",
+                                        fontSize = 24.sp,
+                                        color = Color.White,
+                                        textAlign = TextAlign.Center
+                                    )
+                                }
+                            }
+                        },
+                        selected = true,
+                        onClick = { /* Already on study progress */ },
+                        label = null,
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = Color.Transparent,
+                            indicatorColor = Color.Transparent,
+                            unselectedIconColor = Color.Transparent
+                        )
+                    )
+                    NavigationBarItem(
+                        icon = {
+                            Box(
+                                modifier = Modifier
+                                    .size(48.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(48.dp)
+                                        .background(Color(0xFFAAAAAA), CircleShape),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = "💾",
+                                        fontSize = 20.sp,
+                                        color = naranjitafondo,
+                                        textAlign = TextAlign.Center
+                                    )
+                                }
+                            }
+                        },
+                        selected = false,
+                        onClick = { navController.navigate("offline_mode") },
+                        label = null,
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = Color.Transparent,
+                            indicatorColor = Color.Transparent,
+                            unselectedIconColor = Color.Transparent
+                        )
+                    )
+                }
+            }
         }
     ) { paddingValues ->
         Surface(

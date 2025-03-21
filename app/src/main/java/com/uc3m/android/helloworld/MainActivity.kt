@@ -37,6 +37,10 @@ class MainActivity : ComponentActivity() {
                     composable("study_plans") { StudyPlansScreen(navController) }
                     composable("study_progress") { StudyProgressScreen(navController) }
                     composable("offline_mode") { OfflineModeScreen(navController)}
+                    composable("offline_mode/{subject}") { backStackEntry ->
+                        val subject = backStackEntry.arguments?.getString("subject") ?: return@composable
+                        OfflineModeScreen(navController)
+                    }
                     composable("study_plans") { StudyPlansScreen(navController) }
                     composable("exams_preparation") { PrepExams(navController) }
                     composable("projects_preparation") { ProjectsPreparationScreen(navController) }
