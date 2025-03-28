@@ -100,31 +100,17 @@ fun HomeScreen(navController: NavController) {
                                 }
                             )
                             DropdownMenuItem(
-                                text = { Text("Notifications") },
+                                text = { Text("Dictionary") },
                                 onClick = {
                                     showMenu = false
-                                    // TODO: Navigate to notifications
-                                }
-                            )
-                            DropdownMenuItem(
-                                text = { Text("Help & Support") },
-                                onClick = {
-                                    showMenu = false
-                                    // TODO: Navigate to help
-                                }
-                            )
-                            DropdownMenuItem(
-                                text = { Text("About") },
-                                onClick = {
-                                    showMenu = false
-                                    // TODO: Navigate to about
+                                    navController.navigate("educational_facts")
                                 }
                             )
                             DropdownMenuItem(
                                 text = { Text("Logout") },
                                 onClick = {
                                     showMenu = false
-                                    soundManager.playNotificationSound()
+                                    authHelper.signOut()
                                     navController.navigate("login") {
                                         popUpTo("home") { inclusive = true }
                                     }
@@ -157,19 +143,12 @@ fun HomeScreen(navController: NavController) {
                                     .size(48.dp),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Box(
-                                    modifier = Modifier
-                                        .size(48.dp)
-                                        .background(Color(0xFFAAAAAA), CircleShape),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Text(
-                                        text = "📚",
-                                        fontSize = 20.sp,
-                                        color = naranjitafondo,
-                                        textAlign = TextAlign.Center
-                                    )
-                                }
+                                Text(
+                                    text = "📚",
+                                    fontSize = 20.sp,
+                                    color = naranjitafondo,
+                                    textAlign = TextAlign.Center
+                                )
                             }
                         },
                         selected = false,
@@ -188,19 +167,12 @@ fun HomeScreen(navController: NavController) {
                                     .size(48.dp),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Box(
-                                    modifier = Modifier
-                                        .size(48.dp)
-                                        .background(Color(0xFFAAAAAA), CircleShape),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Text(
-                                        text = "📅",
-                                        fontSize = 20.sp,
-                                        color = naranjitafondo,
-                                        textAlign = TextAlign.Center
-                                    )
-                                }
+                                Text(
+                                    text = "📅",
+                                    fontSize = 20.sp,
+                                    color = naranjitafondo,
+                                    textAlign = TextAlign.Center
+                                )
                             }
                         },
                         selected = false,
@@ -244,19 +216,12 @@ fun HomeScreen(navController: NavController) {
                                     .size(48.dp),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Box(
-                                    modifier = Modifier
-                                        .size(48.dp)
-                                        .background(Color(0xFFAAAAAA), CircleShape),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Text(
-                                        text = "📊",
-                                        fontSize = 20.sp,
-                                        color = naranjitafondo,
-                                        textAlign = TextAlign.Center
-                                    )
-                                }
+                                Text(
+                                    text = "📊",
+                                    fontSize = 20.sp,
+                                    color = naranjitafondo,
+                                    textAlign = TextAlign.Center
+                                )
                             }
                         },
                         selected = false,
@@ -275,19 +240,12 @@ fun HomeScreen(navController: NavController) {
                                     .size(48.dp),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Box(
-                                    modifier = Modifier
-                                        .size(48.dp)
-                                        .background(Color(0xFFAAAAAA), CircleShape),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Text(
-                                        text = "💾",
-                                        fontSize = 20.sp,
-                                        color = naranjitafondo,
-                                        textAlign = TextAlign.Center
-                                    )
-                                }
+                                Text(
+                                    text = "💾",
+                                    fontSize = 20.sp,
+                                    color = naranjitafondo,
+                                    textAlign = TextAlign.Center
+                                )
                             }
                         },
                         selected = false,

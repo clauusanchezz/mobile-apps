@@ -21,6 +21,7 @@ import com.uc3m.android.helloworld.screens.StudyPlansScreen
 import com.uc3m.android.helloworld.screens.ReviewClarificationScreen
 import com.uc3m.android.helloworld.screens.TimeManagementScreen
 import com.uc3m.android.helloworld.screens.WorkingInTeamsScreen
+import com.uc3m.android.helloworld.screens.EducationalFactsScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,6 +49,7 @@ class MainActivity : ComponentActivity() {
                     composable("motivation_strategy") { MotivationStrategyScreen(navController) }
                     composable("working_in_teams") { WorkingInTeamsScreen(navController) }
                     composable("time_management") { TimeManagementScreen(navController) }
+                    composable("educational_facts") { EducationalFactsScreen(navController) }
                 }
             }
         }
