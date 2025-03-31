@@ -87,8 +87,8 @@ fun SubjectScreen(navController: NavController?) {
                         label = null,
                         colors = NavigationBarItemDefaults.colors(
                             selectedIconColor = Color.Transparent,
-                            indicatorColor = Color.Transparent,
-                            unselectedIconColor = Color.Transparent
+                            unselectedIconColor = Color.Transparent,
+                            indicatorColor = Color(0xFFF5F5F5)
                         )
                     )
                     NavigationBarItem(

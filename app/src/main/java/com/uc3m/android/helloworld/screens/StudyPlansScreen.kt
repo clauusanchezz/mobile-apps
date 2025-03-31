@@ -24,7 +24,6 @@ import androidx.navigation.NavController
 @Composable
 fun StudyPlansScreen(navController: NavController?) {
     val whiteColor = Color(0xFFFFFFFF)
-    val titleColor = Color(0xFFFF9966) // Naranja claro
     val naranjitafondo = Color(0xFFFF9966) // Fondo naranja para el topBar
     val blackColor = Color(0xFF000000) // Color negro para el texto del título
 
@@ -127,8 +126,8 @@ fun StudyPlansScreen(navController: NavController?) {
                         label = null,
                         colors = NavigationBarItemDefaults.colors(
                             selectedIconColor = Color.Transparent,
-                            indicatorColor = Color.Transparent,
-                            unselectedIconColor = Color.Transparent
+                            unselectedIconColor = Color.Transparent,
+                            indicatorColor = Color(0xFFF5F5F5)
                         )
                     )
                     NavigationBarItem(

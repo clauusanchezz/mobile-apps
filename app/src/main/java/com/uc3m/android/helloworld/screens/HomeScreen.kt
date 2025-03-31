@@ -143,12 +143,19 @@ fun HomeScreen(navController: NavController) {
                                     .size(48.dp),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Text(
-                                    text = "📚",
-                                    fontSize = 20.sp,
-                                    color = naranjitafondo,
-                                    textAlign = TextAlign.Center
-                                )
+                                Box(
+                                    modifier = Modifier
+                                        .size(48.dp)
+                                        .background(Color(0xFFAAAAAA), CircleShape),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = "📚",
+                                        fontSize = 20.sp,
+                                        color = naranjitafondo,
+                                        textAlign = TextAlign.Center
+                                    )
+                                }
                             }
                         },
                         selected = false,
@@ -167,12 +174,19 @@ fun HomeScreen(navController: NavController) {
                                     .size(48.dp),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Text(
-                                    text = "📅",
-                                    fontSize = 20.sp,
-                                    color = naranjitafondo,
-                                    textAlign = TextAlign.Center
-                                )
+                                Box(
+                                    modifier = Modifier
+                                        .size(48.dp)
+                                        .background(Color(0xFFAAAAAA), CircleShape),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = "📅",
+                                        fontSize = 20.sp,
+                                        color = naranjitafondo,
+                                        textAlign = TextAlign.Center
+                                    )
+                                }
                             }
                         },
                         selected = false,
@@ -188,27 +202,30 @@ fun HomeScreen(navController: NavController) {
                         icon = {
                             Box(
                                 modifier = Modifier
-                                    .size(96.dp)
-                                    .background(naranjitafondo, CircleShape),
+                                    .size(80.dp)  // Increase the size of the circle
+                                    .background(naranjitafondo, CircleShape),  // Orange background for the circle
                                 contentAlignment = Alignment.Center
                             ) {
                                 Icon(
-                                    imageVector = Icons.Default.Home,
+                                    imageVector = Icons.Default.Home,  // Home icon
                                     contentDescription = "Home",
-                                    tint = Color.White,
-                                    modifier = Modifier.size(48.dp)
+                                    tint = whiteColor,  // Set the icon color to white
+                                    modifier = Modifier.size(40.dp)  // Adjust the icon size to fit within the circle
                                 )
                             }
                         },
-                        selected = true,
+                        selected = true,  // Keep it selected
                         onClick = { /* Already on home */ },
                         label = null,
                         colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = Color.Transparent,
-                            indicatorColor = Color.Transparent,
-                            unselectedIconColor = Color.Transparent
+                            selectedIconColor = Color.Transparent,  // Remove any selection color
+                            unselectedIconColor = Color.Transparent,  // Color for unselected items (gray here, but you can change it)
+                            indicatorColor = Color(0xFFF5F5F5)  // Set the selected item background to the light color
                         )
                     )
+
+
+
                     NavigationBarItem(
                         icon = {
                             Box(
@@ -216,12 +233,19 @@ fun HomeScreen(navController: NavController) {
                                     .size(48.dp),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Text(
-                                    text = "📊",
-                                    fontSize = 20.sp,
-                                    color = naranjitafondo,
-                                    textAlign = TextAlign.Center
-                                )
+                                Box(
+                                    modifier = Modifier
+                                        .size(48.dp)
+                                        .background(Color(0xFFAAAAAA), CircleShape),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = "📊",
+                                        fontSize = 20.sp,
+                                        color = naranjitafondo,
+                                        textAlign = TextAlign.Center
+                                    )
+                                }
                             }
                         },
                         selected = false,
@@ -240,12 +264,19 @@ fun HomeScreen(navController: NavController) {
                                     .size(48.dp),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Text(
-                                    text = "💾",
-                                    fontSize = 20.sp,
-                                    color = naranjitafondo,
-                                    textAlign = TextAlign.Center
-                                )
+                                Box(
+                                    modifier = Modifier
+                                        .size(48.dp)
+                                        .background(Color(0xFFAAAAAA), CircleShape),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = "💾",
+                                        fontSize = 20.sp,
+                                        color = naranjitafondo,
+                                        textAlign = TextAlign.Center
+                                    )
+                                }
                             }
                         },
                         selected = false,
