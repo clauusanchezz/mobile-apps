@@ -13,38 +13,53 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.uc3m.android.helloworld.viewmodel.DataBaseViewModel
+import androidx.compose.runtime.livedata.observeAsState
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SubjectScreen(navController: NavController?) {
-    val naranjitafondo = Color(0xFFFF9966) // Naranja claro
-    val whiteColor = Color(0xFFFFFFFF) // Blanco para el texto
-    val blackColor = Color(0xFF000000)
+fun SubjectScreen(navController: NavController, viewModel: DataBaseViewModel = viewModel()) {
+    // Define custom colors
+    val orangeBackground = Color(0xFFFF9966)
+    val whiteColor = Color.White
+    val blackColor = Color.Black
 
-    // El Scaffold tiene el topBar, el cual se utiliza para poner el título con el fondo naranja
+    // Observe subjects from the ViewModel
+    val subjects by viewModel.subjects.observeAsState(emptyList())
+
+    // Load subjects when the screen is first composed
+    LaunchedEffect(Unit) {
+        viewModel.loadSubjects()
+    }
+
+    // Scaffold = main layout with top and bottom bars
     Scaffold(
         topBar = {
+            // Top bar with title
             TopAppBar(
                 title = {
                     Text(
                         "Subjects",
                         fontSize = 32.sp,
                         fontWeight = FontWeight.Bold,
-                        color = whiteColor // Texto blanco
+                        color = whiteColor
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = naranjitafondo, // Fondo naranja
-                    titleContentColor = whiteColor // Título blanco
+                    containerColor = orangeBackground, // Orange background
+                    titleContentColor = whiteColor // White title
                 ),
-                modifier = Modifier.fillMaxWidth() // Asegura que ocupe toda la pantalla
+                modifier = Modifier.fillMaxWidth() // To ensure it occupies the whole screen
             )
         },
+
+        // Bottom Navigation Bar
         bottomBar = {
             Box(
                 modifier = Modifier
@@ -70,7 +85,7 @@ fun SubjectScreen(navController: NavController?) {
                                 Box(
                                     modifier = Modifier
                                         .size(96.dp)
-                                        .background(naranjitafondo, CircleShape),
+                                        .background(orangeBackground, CircleShape),
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Text(
@@ -107,7 +122,7 @@ fun SubjectScreen(navController: NavController?) {
                                     Text(
                                         text = "📅",
                                         fontSize = 20.sp,
-                                        color = naranjitafondo,
+                                        color = orangeBackground,
                                         textAlign = TextAlign.Center
                                     )
                                 }
@@ -169,7 +184,7 @@ fun SubjectScreen(navController: NavController?) {
                                     Text(
                                         text = "📊",
                                         fontSize = 20.sp,
-                                        color = naranjitafondo,
+                                        color = orangeBackground,
                                         textAlign = TextAlign.Center
                                     )
                                 }
@@ -200,7 +215,7 @@ fun SubjectScreen(navController: NavController?) {
                                     Text(
                                         text = "💾",
                                         fontSize = 20.sp,
-                                        color = naranjitafondo,
+                                        color = orangeBackground,
                                         textAlign = TextAlign.Center
                                     )
                                 }
@@ -219,12 +234,13 @@ fun SubjectScreen(navController: NavController?) {
             }
         }
     ) { paddingValues ->
+        // Main content
         // El contenido de la pantalla se ajusta debajo de la barra superior
         Surface(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues), // Para no sobreponer el contenido con la topBar
-            color = Color(0xFFFFFFFF) // Fondo blanco para el contenido
+            color = Color.White // Fondo blanco para el contenido
         ) {
             Column(
                 modifier = Modifier
@@ -233,28 +249,16 @@ fun SubjectScreen(navController: NavController?) {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
-                // Lista de materias con emojis
+                // Lazy list of subjects with emojis and names
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     contentPadding = PaddingValues(top = 16.dp, bottom = 32.dp)
                 ) {
-                    val subjectsWithIcons = listOf(
-                        "📐 Maths" to "Maths",
-                        "🗺️ Geography" to "Geography",
-                        "📜 History" to "History",
-                        "📖 English" to "English",
-                        "🇪🇸 Spanish" to "Spanish",
-                        "🎵 Music" to "Music",
-                        "🧬 Biology" to "Biology",
-                        "🔬 Physics" to "Physics",
-                        "🎨 Art" to "Art"
-                    )
-
-                    items(subjectsWithIcons.size) { index ->
-                        val (emojiSubject, subject) = subjectsWithIcons[index]
-                        SubjectButton(subjectName = emojiSubject) {
-                            // Manejo del click
+                    items(subjects.size) { index ->
+                        val subject = subjects[index]
+                        SubjectButton(subjectName = "${emojiForSubject(subject.name)} ${subject.name}") {
+                            navController.navigate("units/${subject.id}")
                         }
                     }
                 }
@@ -263,9 +267,11 @@ fun SubjectScreen(navController: NavController?) {
     }
 }
 
+
 @Composable
 fun SubjectButton(subjectName: String, onClick: () -> Unit) {
-    val naranjitafondo = Color(0xFFFF9966) // Naranja claro
+    val orangeBackground = Color(0xFFFF9966)
+
 
     Button(
         onClick = onClick,
@@ -274,7 +280,7 @@ fun SubjectButton(subjectName: String, onClick: () -> Unit) {
             .height(70.dp)
             .padding(horizontal = 8.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = naranjitafondo,
+            containerColor = orangeBackground,
             contentColor = Color.White
         ),
         shape = RoundedCornerShape(20.dp),
@@ -285,5 +291,19 @@ fun SubjectButton(subjectName: String, onClick: () -> Unit) {
             fontWeight = FontWeight.SemiBold,
             letterSpacing = 1.sp
         )
+    }
+}
+
+fun emojiForSubject(name: String): String {
+    return when (name.lowercase()) {
+        "maths" -> "📐"
+        "geography" -> "🗺️"
+        "history" -> "📜"
+        "english" -> "📖"
+        "spanish" -> "🇪🇸"
+        "biology" -> "🧬"
+        "science" -> "🔬"
+
+        else -> "📚"
     }
 }

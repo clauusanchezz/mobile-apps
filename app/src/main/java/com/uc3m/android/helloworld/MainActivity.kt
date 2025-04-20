@@ -4,40 +4,57 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.uc3m.android.helloworld.ui.theme.HelloWorldTheme
-import com.uc3m.android.helloworld.screens.LoginScreen
-import com.uc3m.android.helloworld.screens.SignUpScreen
-import com.uc3m.android.helloworld.screens.HomeScreen
-import com.uc3m.android.helloworld.screens.MotivationStrategyScreen
-import com.uc3m.android.helloworld.screens.OfflineModeScreen
-import com.uc3m.android.helloworld.screens.PrepExams
-import com.uc3m.android.helloworld.screens.ProjectsPreparationScreen
-import com.uc3m.android.helloworld.screens.StudyProgressScreen
-import com.uc3m.android.helloworld.screens.SubjectScreen
-import com.uc3m.android.helloworld.screens.StudyPlansScreen
-import com.uc3m.android.helloworld.screens.ReviewClarificationScreen
-import com.uc3m.android.helloworld.screens.TimeManagementScreen
-import com.uc3m.android.helloworld.screens.WorkingInTeamsScreen
-import com.uc3m.android.helloworld.screens.EducationalFactsScreen
+import com.uc3m.android.helloworld.screens.*
+import com.uc3m.android.helloworld.viewmodel.*
+import kotlinx.coroutines.launch
+import androidx.compose.runtime.livedata.observeAsState
+
+
 
 class MainActivity : ComponentActivity() {
+
+    private lateinit var dbViewModel: DataBaseViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        // Create and observe ViewModel
+        dbViewModel = ViewModelProvider(this)[DataBaseViewModel::class.java]
+
+        lifecycleScope.launch {
+            // TODO NO FUNCIONA
+            //dbViewModel.resetInitializationFlag()
+            // Initialize the database if not initialized
+            if (dbViewModel.isInitialized.value != true) {
+            dbViewModel.initializeDatabase() // Initialize database if not initialized
+            } else {
+                //dbViewModel.startListeningToSubjects() // Start listening to subjects if initialized
+            }
+        }
+
         setContent {
             HelloWorldTheme {
                 val navController = rememberNavController()
+
                 NavHost(navController, startDestination = "login") {
                     composable("login") { LoginScreen(navController) }
                     composable("home") { HomeScreen(navController) }
                     composable("signup") { SignUpScreen(navController) }
-                    composable("subjects") { SubjectScreen(navController) }
+                    composable("subjects") {
+                        // Observe subjects from the ViewModel
+                        val subjects = dbViewModel.subjects.observeAsState(emptyList()).value
+                        SubjectScreen(navController, dbViewModel)
+                    }
                     composable("study_plans") { StudyPlansScreen(navController) }
                     composable("study_progress") { StudyProgressScreen(navController) }
-                    composable("offline_mode") { OfflineModeScreen(navController)}
+                    composable("offline_mode") { OfflineModeScreen(navController) }
                     composable("offline_mode/{subject}") { backStackEntry ->
                         val subject = backStackEntry.arguments?.getString("subject") ?: return@composable
                         OfflineModeScreen(navController)
@@ -50,8 +67,28 @@ class MainActivity : ComponentActivity() {
                     composable("working_in_teams") { WorkingInTeamsScreen(navController) }
                     composable("time_management") { TimeManagementScreen(navController) }
                     composable("educational_facts") { EducationalFactsScreen(navController) }
+
+                    // Route for navigating to UnitScreen
+                    composable("units/{subjectName}") { backStackEntry ->
+                        val subjectName = backStackEntry.arguments?.getString("subjectName") ?: return@composable
+                        UnitScreen(subjectName = subjectName, navController = navController)
+                    }
+
+                    // Route for navigating to QuestionsScreen
+                    composable("questions_screen/{subjectId}/{unitId}") { backStackEntry ->
+                        val subjectId = backStackEntry.arguments?.getString("subjectId") ?: return@composable
+                        val unitId = backStackEntry.arguments?.getString("unitId") ?: return@composable
+                        QuestionsScreen(subjectId = subjectId, unitId = unitId, navController = navController)
+                    }
+
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Stop listening to subjects and units when the activity is destroyed
+        dbViewModel.stopListening()
     }
 }
