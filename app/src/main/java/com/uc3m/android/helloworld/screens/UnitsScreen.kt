@@ -1,16 +1,21 @@
 package com.uc3m.android.helloworld.screens
 
+import androidx.compose.animation.*
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.uc3m.android.helloworld.data.SubjectUnit
@@ -20,7 +25,12 @@ import androidx.navigation.NavController
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
-
+import androidx.compose.animation.core.*
+import androidx.compose.foundation.clickable
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.style.TextOverflow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,28 +41,38 @@ fun UnitScreen(
 ) {
     val orange = Color(0xFFFF9966)
     val white = Color.White
+    val lightGray = Color(0xFFF5F5F5)
+    val darkGray = Color(0xFF333333)
+    val cardBackground = Color(0xFFF8F8F8)
 
-    // Observar las unidades desde el ViewModel
+    // Observe units from ViewModel
     val units by viewModel.units.observeAsState(emptyList())
 
-    // Cargar las unidades al inicio
+    // Load units on start
     LaunchedEffect(Unit) {
-        viewModel.loadUnitsForSubject(subjectName) // Función para cargar unidades según el nombre de la asignatura
+        viewModel.loadUnitsForSubject(subjectName)
     }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
-                        text = subjectName,
-                        fontSize = 28.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = white
-                    )
+                    Column {
+                        Text(
+                            text = subjectName,
+                            fontSize = 28.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = white
+                        )
+                        Text(
+                            text = "${units.size} Units Available",
+                            fontSize = 14.sp,
+                            color = white.copy(alpha = 0.8f)
+                        )
+                    }
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {  // Regresar a la pantalla anterior
+                    IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
                             contentDescription = "Back",
@@ -70,27 +90,67 @@ fun UnitScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues),
-            color = white
+            color = lightGray
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Top
+                    .padding(horizontal = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Listado de unidades
+                // Progress overview card
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp),
+                    colors = CardDefaults.cardColors(containerColor = white),
+                    shape = RoundedCornerShape(16.dp)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "Your Progress",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = darkGray
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        LinearProgressIndicator(
+                            progress = 0.3f, // TODO: Implement actual progress tracking
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(8.dp)
+                                .clip(RoundedCornerShape(4.dp)),
+                            color = orange,
+                            trackColor = lightGray
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = "30% Complete",
+                            fontSize = 14.sp,
+                            color = darkGray.copy(alpha = 0.7f)
+                        )
+                    }
+                }
+
+                // Units list
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                    contentPadding = PaddingValues(top = 16.dp, bottom = 32.dp)
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    contentPadding = PaddingValues(bottom = 16.dp)
                 ) {
                     items(units.size) { index ->
                         val unit = units[index]
-                        UnitButton(unitName = unit.name) {
-                            navController.navigate("questions_screen/${subjectName}/${unit.id}")
-// Navegar a la pantalla de detalles de la unidad
-                        }
+                        UnitCard(
+                            unit = unit,
+                            onClick = {
+                                navController.navigate("questions_screen/${subjectName}/${unit.id}")
+                            }
+                        )
                     }
                 }
             }
@@ -99,33 +159,76 @@ fun UnitScreen(
 }
 
 @Composable
-fun UnitButton(unitName: String, onClick: () -> Unit) {
-    val normalColor = Color(0xFFFF9966)
-    val pressedColor = Color(0xFFE07B4F)
+fun UnitCard(
+    unit: SubjectUnit,
+    onClick: () -> Unit
+) {
+    val orange = Color(0xFFFF9966)
+    val white = Color.White
+    val darkGray = Color(0xFF333333)
+    val cardBackground = Color(0xFFF8F8F8)
+    
+    var isPressed by remember { mutableStateOf(false) }
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed) 0.95f else 1f,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow
+        )
+    )
 
-    val interactionSource = remember { MutableInteractionSource() }
-    val isPressed by interactionSource.collectIsPressedAsState()
-
-    val backgroundColor = if (isPressed) pressedColor else normalColor
-
-    Button(
-        onClick = onClick,
-        interactionSource = interactionSource,
+    Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(70.dp)
-            .padding(horizontal = 8.dp),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = backgroundColor,
-            contentColor = Color.White
-        ),
-        shape = RoundedCornerShape(20.dp),
+            .scale(scale)
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) {
+                isPressed = true
+                onClick()
+            },
+        colors = CardDefaults.cardColors(containerColor = white),
+        shape = RoundedCornerShape(16.dp)
     ) {
-        Text(
-            text = unitName,
-            fontSize = 22.sp,
-            fontWeight = FontWeight.SemiBold,
-            letterSpacing = 1.sp
-        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = unit.name,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = darkGray,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "5 Questions", // TODO: Get actual question count
+                    fontSize = 14.sp,
+                    color = darkGray.copy(alpha = 0.6f)
+                )
+            }
+            
+            IconButton(
+                onClick = onClick,
+                modifier = Modifier
+                    .size(40.dp)
+                    .background(orange, RoundedCornerShape(20.dp))
+            ) {
+                Icon(
+                    imageVector = Icons.Default.PlayArrow,
+                    contentDescription = "Start Unit",
+                    tint = white
+                )
+            }
+        }
     }
 }
