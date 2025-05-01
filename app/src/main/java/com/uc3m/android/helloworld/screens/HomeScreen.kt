@@ -2,6 +2,7 @@ package com.uc3m.android.helloworld.screens
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -13,6 +14,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
@@ -26,10 +28,16 @@ import androidx.navigation.NavController
 import com.uc3m.android.helloworld.auth.FirebaseAuthHelper
 import androidx.compose.ui.text.font.FontStyle
 import com.uc3m.android.helloworld.utils.SoundManager
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.uc3m.android.helloworld.viewmodel.DataBaseViewModel
+import androidx.compose.runtime.livedata.observeAsState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(
+    navController: NavController,
+    viewModel: DataBaseViewModel = viewModel()
+) {
     val whiteColor = Color(0xFFFFFFFF)
     val blackColor = Color(0xFF000000)
     val naranjitafondo = Color(0xFFFF9966)
@@ -46,6 +54,28 @@ fun HomeScreen(navController: NavController) {
     // Fetch username when the screen is created
     LaunchedEffect(Unit) {
         username = authHelper.getCurrentUsername() ?: "User"
+    }
+
+    // Load subjects and questions when the screen is created
+    LaunchedEffect(Unit) {
+        viewModel.loadSubjects()
+    }
+
+    // Observe subjects
+    val subjects by viewModel.subjects.observeAsState(emptyList())
+
+    // State for random tests
+    var randomTests by remember { mutableStateOf(emptyList<Pair<String, String>>()) }
+
+    // Update random tests when subjects change
+    LaunchedEffect(subjects) {
+        if (subjects.isNotEmpty()) {
+            // Get 3 random subjects
+            val selectedSubjects = subjects.shuffled().take(3)
+            randomTests = selectedSubjects.mapNotNull { subject ->
+                subject.id?.let { id -> subject.name to id }
+            }
+        }
     }
 
     // This would come from your user's data
@@ -202,30 +232,27 @@ fun HomeScreen(navController: NavController) {
                         icon = {
                             Box(
                                 modifier = Modifier
-                                    .size(80.dp)  // Increase the size of the circle
-                                    .background(naranjitafondo, CircleShape),  // Orange background for the circle
+                                    .size(80.dp)
+                                    .background(naranjitafondo, CircleShape),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Icon(
-                                    imageVector = Icons.Default.Home,  // Home icon
+                                    imageVector = Icons.Default.Home,
                                     contentDescription = "Home",
-                                    tint = whiteColor,  // Set the icon color to white
-                                    modifier = Modifier.size(40.dp)  // Adjust the icon size to fit within the circle
+                                    tint = whiteColor,
+                                    modifier = Modifier.size(40.dp)
                                 )
                             }
                         },
-                        selected = true,  // Keep it selected
+                        selected = true,
                         onClick = { /* Already on home */ },
                         label = null,
                         colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = Color.Transparent,  // Remove any selection color
-                            unselectedIconColor = Color.Transparent,  // Color for unselected items (gray here, but you can change it)
-                            indicatorColor = Color(0xFFF5F5F5)  // Set the selected item background to the light color
+                            selectedIconColor = Color.Transparent,
+                            unselectedIconColor = Color.Transparent,
+                            indicatorColor = Color(0xFFF5F5F5)
                         )
                     )
-
-
-
                     NavigationBarItem(
                         icon = {
                             Box(
@@ -280,7 +307,7 @@ fun HomeScreen(navController: NavController) {
                             }
                         },
                         selected = false,
-                        onClick = { navController.navigate("offline") },
+                        onClick = { navController.navigate("offline_mode") },
                         label = null,
                         colors = NavigationBarItemDefaults.colors(
                             selectedIconColor = Color.Transparent,
@@ -301,103 +328,292 @@ fun HomeScreen(navController: NavController) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                    .padding(horizontal = 24.dp),
+                horizontalAlignment = Alignment.Start
             ) {
-                Box(
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // Welcome Message
+                Column(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(top = 32.dp),
-                    contentAlignment = Alignment.Center
+                        .fillMaxWidth()
+                        .padding(bottom = 32.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "Welcome to",
+                        fontSize = 24.sp,
+                        color = Color.Gray,
+                        fontWeight = FontWeight.Medium,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Text(
+                        text = "StudyStorm!",
+                        fontSize = 44.sp,
+                        color = naranjitafondo,
+                        fontWeight = FontWeight.ExtraBold,
+                        letterSpacing = (-1).sp,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 4.dp)
+                    )
+                    // Decorative line
+                    Box(
+                        modifier = Modifier
+                            .width(60.dp)
+                            .height(4.dp)
+                            .padding(top = 16.dp)
+                            .background(
+                                color = naranjitafondo,
+                                shape = RoundedCornerShape(2.dp)
+                            )
+                    )
+                }
+
+                // Simple Level Display
+                Text(
+                    text = "${(progress * 100).toInt()}%",
+                    fontSize = 16.sp,
+                    color = naranjitafondo,
+                    fontWeight = FontWeight.Medium,
+                    modifier = Modifier.padding(bottom = 4.dp)
+                )
+                LinearProgressIndicator(
+                    progress = progress,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(4.dp)
+                        .clip(RoundedCornerShape(2.dp)),
+                    color = naranjitafondo,
+                    trackColor = backgroundColor.copy(alpha = 0.2f)
+                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Level ${currentLevel}",
+                        fontSize = 16.sp,
+                        color = Color.Gray,
+                        fontWeight = FontWeight.Medium
+                    )
+                    Box(
+                        modifier = Modifier
+                            .size(32.dp)
+                            .background(backgroundColor.copy(alpha = 0.1f), CircleShape),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "⭐",
+                            fontSize = 16.sp
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.weight(0.5f))
+
+                // Motivational Quote
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "\"The future belongs to those",
+                        fontSize = 20.sp,
+                        color = Color.Gray,
+                        fontWeight = FontWeight.Medium,
+                        textAlign = TextAlign.Center
+                    )
+                    Text(
+                        text = "who believe in the beauty",
+                        fontSize = 20.sp,
+                        color = Color.Gray,
+                        fontWeight = FontWeight.Medium,
+                        textAlign = TextAlign.Center
+                    )
+                    Text(
+                        text = "of their dreams\"",
+                        fontSize = 20.sp,
+                        color = Color.Gray,
+                        fontWeight = FontWeight.Medium,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                    Text(
+                        text = "Eleanor Roosevelt",
+                        fontSize = 16.sp,
+                        color = naranjitafondo,
+                        fontWeight = FontWeight.SemiBold,
+                        textAlign = TextAlign.Center
+                    )
+                }
+
+                Spacer(modifier = Modifier.weight(0.5f))
+
+                // Today's Menu Section with distinct styling
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color(0xFFFFF5EC)
+                    ),
+                    elevation = CardDefaults.cardElevation(
+                        defaultElevation = 0.dp
+                    ),
+                    shape = RoundedCornerShape(24.dp)
                 ) {
                     Column(
-                        modifier = Modifier.fillMaxSize(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.SpaceBetween
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(24.dp)
                     ) {
-                        // Top section with level progress and welcome message
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier.weight(1f)
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            // Level Progress Indicator
+                            Text(
+                                text = "Today's Menu",
+                                fontSize = 24.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = naranjitafondo
+                            )
+                            Text(
+                                text = "🍽️",
+                                fontSize = 24.sp
+                            )
+                        }
+                        
+                        Spacer(modifier = Modifier.height(16.dp))
+                        
+                        if (subjects.isEmpty()) {
+                            // Loading or error state
                             Box(
                                 modifier = Modifier
-                                    .size(250.dp)
-                                    .padding(top = 32.dp),
+                                    .fillMaxWidth()
+                                    .padding(32.dp),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Canvas(
-                                    modifier = Modifier
-                                        .size(200.dp)
-                                        .padding(16.dp)
-                                ) {
-                                    // Background circle
-                                    drawArc(
-                                        color = backgroundColor,
-                                        startAngle = 120f,
-                                        sweepAngle = 300f,
-                                        useCenter = false,
-                                        style = Stroke(width = 40f, cap = StrokeCap.Round),
-                                        size = Size(size.width, size.height)
-                                    )
-
-                                    // Progress arc
-                                    drawArc(
-                                        color = naranjitafondo,
-                                        startAngle = 120f,
-                                        sweepAngle = 300f * progress,
-                                        useCenter = false,
-                                        style = Stroke(width = 40f, cap = StrokeCap.Round),
-                                        size = Size(size.width, size.height)
-                                    )
-                                }
-                                Column(
-                                    horizontalAlignment = Alignment.CenterHorizontally
-                                ) {
-                                    Text(
-                                        text = "Level",
-                                        fontSize = 24.sp,
-                                        color = blackColor,
-                                        fontWeight = FontWeight.Normal
-                                    )
-                                    Text(
-                                        text = currentLevel.toString(),
-                                        fontSize = 48.sp,
-                                        color = blackColor,
-                                        fontWeight = FontWeight.Bold
-                                    )
+                                CircularProgressIndicator(
+                                    color = naranjitafondo
+                                )
+                            }
+                        } else {
+                            // Random Test Links
+                            randomTests.forEach { (subjectName, subjectId) ->
+                                PracticeTestLink(
+                                    emoji = getSubjectEmoji(subjectName),
+                                    title = "$subjectName Quiz",
+                                    subtitle = "Test your knowledge with a quick quiz",
+                                    onClick = {
+                                        viewModel.loadUnitsForSubject(subjectId)
+                                        val unitId = when (subjectId.lowercase()) {
+                                            "maths" -> "u1maths"
+                                            "science" -> "u1science"
+                                            "geo" -> "u1geo"
+                                            "history" -> "u1history"
+                                            "bio" -> "u1bio"
+                                            "spanish" -> "u1spanish"
+                                            "english" -> "u1english"
+                                            else -> "${subjectId}1"
+                                        }
+                                        viewModel.loadQuestionsForUnit(subjectId, unitId)
+                                        navController.navigate("questions_screen/${subjectId}/${unitId}")
+                                    }
+                                )
+                                if (randomTests.last() != Pair(subjectName, subjectId)) {
+                                    Spacer(modifier = Modifier.height(12.dp))
                                 }
                             }
-
-                            Spacer(modifier = Modifier.height(32.dp))
-                            Text(
-                                text = "Welcome to StudyStorm!",
-                                fontSize = 28.sp,
-                                color = blackColor,
-                                modifier = Modifier.padding(top = 12.dp)
-                            )
-                            Spacer(modifier = Modifier.height(32.dp))
-                            Text(
-                                text = "Every small step takes you closer to greatness. Keep going, Learner!",
-                                fontSize = 22.sp,
-                                color = Color(0xFFFF9966),
-                                fontStyle = FontStyle.Italic,
-                                modifier = Modifier.padding(top = 12.dp)
-                            )
-                            Spacer(modifier = Modifier.height(32.dp))
-                            Text(
-                                text = "Select an option:",
-                                fontSize = 18.sp,
-                                color = blackColor,
-                                modifier = Modifier.padding(top = 12.dp)
-                            )
                         }
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun PracticeTestLink(
+    emoji: String,
+    title: String,
+    subtitle: String,
+    onClick: () -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 2.dp
+        ),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Emoji Circle
+            Box(
+                modifier = Modifier
+                    .size(48.dp)
+                    .background(
+                        color = Color(0xFF4CAF50).copy(alpha = 0.1f),
+                        shape = CircleShape
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = emoji,
+                    fontSize = 24.sp
+                )
+            }
+            
+            Spacer(modifier = Modifier.width(12.dp))
+            
+            // Title and Subtitle
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = title,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF333333)
+                )
+                Text(
+                    text = subtitle,
+                    fontSize = 14.sp,
+                    color = Color(0xFF666666)
+                )
+            }
+        }
+    }
+}
+
+private fun getSubjectEmoji(subjectName: String): String {
+    return when (subjectName.lowercase()) {
+        "maths" -> "🧮"
+        "science" -> "🔬"
+        "geography" -> "🌍"
+        "history" -> "📜"
+        "biology" -> "🧬"
+        "spanish" -> "📖"
+        "english" -> "🗣️"
+        else -> "📚"
     }
 }
 
