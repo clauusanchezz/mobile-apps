@@ -67,6 +67,7 @@ class MainActivity : ComponentActivity() {
                     composable("working_in_teams") { WorkingInTeamsScreen(navController) }
                     composable("time_management") { TimeManagementScreen(navController) }
                     composable("educational_facts") { EducationalFactsScreen(navController) }
+                    composable("profile_settings") { ProfileSettingsScreen(navController) }
 
                     // Route for navigating to UnitScreen
                     composable("units/{subjectName}") { backStackEntry ->

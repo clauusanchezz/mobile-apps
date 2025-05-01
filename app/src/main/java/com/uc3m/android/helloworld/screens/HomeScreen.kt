@@ -126,7 +126,7 @@ fun HomeScreen(
                                 text = { Text("Profile Settings") },
                                 onClick = {
                                     showMenu = false
-                                    // TODO: Navigate to profile settings
+                                    navController.navigate("profile_settings")
                                 }
                             )
                             DropdownMenuItem(

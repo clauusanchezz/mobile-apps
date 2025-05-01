@@ -151,53 +151,39 @@ fun EducationalFactsScreen(navController: NavController) {
 
     Scaffold(
         topBar = {
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(80.dp)
-                    .background(Color(0xFFFF9966))
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        IconButton(
-                            onClick = { navController.navigateUp() },
-                            modifier = Modifier.size(48.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.ArrowBack,
-                                contentDescription = "Volver",
-                                tint = Color.White
-                            )
-                        }
-                        Spacer(modifier = Modifier.width(16.dp))
-                        Text(
-                            text = "Dictionary",
-                            fontSize = 28.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White
-                        )
-                    }
-                    IconButton(
-                        onClick = { showSearch = !showSearch },
-                        modifier = Modifier.size(48.dp)
-                    ) {
+            TopAppBar(
+                title = {
+                    Text(
+                        "Dictionary",
+                        fontSize = 32.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = { navController.navigateUp() }) {
                         Icon(
-                            imageVector = Icons.Default.Search,
-                            contentDescription = "Buscar",
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Back",
                             tint = Color.White
                         )
                     }
-                }
-            }
+                },
+                actions = {
+                    IconButton(onClick = { showSearch = !showSearch }) {
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = "Search",
+                            tint = Color.White
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color(0xFFFF9966),
+                    titleContentColor = Color.White
+                ),
+                modifier = Modifier.fillMaxWidth()
+            )
         }
     ) { paddingValues ->
         Column(

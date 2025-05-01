@@ -43,4 +43,8 @@ class FirebaseAuthHelper {
     fun getCurrentUsername(): String? {
         return auth.currentUser?.displayName
     }
+
+    fun getCurrentUserEmail(): String? {
+        return auth.currentUser?.email
+    }
 } 
