@@ -1,100 +1,237 @@
 package com.uc3m.android.helloworld.screens
 
 import android.content.Context
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WorkingInTeamsScreen(navController: NavController) {
-    val titleColor = Color(0xFFFF9966) // Naranja claro
-    // List of tips for working in teams
-    val teamworkTips = listOf(
-        "🤝 Communicate openly: Effective communication is key to a successful team.",
-        "🎯 Define clear roles: Everyone should know their responsibilities to avoid confusion.",
-        "🧑‍🤝‍🧑 Collaborate and share ideas: Encourage everyone to contribute to discussions and solutions.",
-        "⏰ Manage time effectively: Set deadlines for tasks and ensure everyone sticks to them.",
-        "💬 Listen to others: Respect the opinions and ideas of other team members.",
-        "🌟 Stay positive: Keep a positive attitude to inspire and motivate others in the team.",
-        "🔄 Be flexible: Adapt to new ideas and ways of working that may emerge in the team.",
-        "🎉 Celebrate success: Acknowledge and celebrate milestones and achievements to boost morale.",
-        "🔍 Provide constructive feedback: Offer helpful and respectful feedback to help each other improve.",
+    val titleColor = Color(0xFFFF9966)
+    val white = Color.White
+    val darkGray = Color(0xFF333333)
+    val lightGray = Color(0xFFF5F5F5)
+    val cardBackground = Color(0xFFF8F9FA)
+    val accentColor = Color(0xFF4CAF50)
+    
+    // List of tips with emojis and split into title and description
+    val tips = listOf(
+        Triple("🤝", "Communicate openly", "Effective communication is key to a successful team"),
+        Triple("🎯", "Define clear roles", "Everyone should know their responsibilities to avoid confusion"),
+        Triple("🧑‍🤝‍🧑", "Share ideas", "Encourage everyone to contribute to discussions and solutions"),
+        Triple("⏰", "Manage time well", "Set deadlines for tasks and ensure everyone sticks to them"),
+        Triple("💬", "Listen actively", "Respect the opinions and ideas of other team members"),
+        Triple("🌟", "Stay positive", "Keep a positive attitude to inspire and motivate others"),
+        Triple("🔄", "Be flexible", "Adapt to new ideas and ways of working that may emerge"),
+        Triple("🎉", "Celebrate success", "Acknowledge and celebrate milestones and achievements"),
+        Triple("🔍", "Give feedback", "Offer helpful and respectful feedback to help each other improve")
     )
 
-    // Main container for the screen
-    Surface(modifier = Modifier.fillMaxSize().background(Color(0xFFFFFFFF)).padding(16.dp), color = Color(0xFFFFFFFF)) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+    var currentTipIndex by remember { mutableStateOf(0) }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = "Working in Teams",
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = white
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Back",
+                            tint = white
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = titleColor
+                )
+            )
+        }
+    ) { paddingValues ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .background(white)
         ) {
-            Spacer(modifier = Modifier.height(40.dp))
-            // Title of the screen
-            Text(
-                text = "Teamwork Tips",
-                fontSize = 32.sp,
-                fontWeight = FontWeight.Bold,
-                color = titleColor,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // Title of the teamwork tips list
-            Text(
-                text = "Useful Tips",
-                fontSize = 24.sp,
-                color = titleColor,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // List of teamwork tips
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(vertical = 16.dp)
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                items(teamworkTips) { tip ->
-                    TeamworkTipItem(tip)
-                    Spacer(modifier = Modifier.height(12.dp)) // Space between tips
+                // Progress indicator and counter at the top
+                LinearProgressIndicator(
+                    progress = (currentTipIndex + 1).toFloat() / tips.size,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(8.dp)
+                        .clip(RoundedCornerShape(4.dp)),
+                    color = titleColor,
+                    trackColor = lightGray
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "Tip ${currentTipIndex + 1} of ${tips.size}",
+                    fontSize = 14.sp,
+                    color = darkGray.copy(alpha = 0.7f)
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // Tip card with fade animation
+                AnimatedContent(
+                    targetState = currentTipIndex,
+                    transitionSpec = {
+                        fadeIn(animationSpec = tween(300)) togetherWith fadeOut(animationSpec = tween(300))
+                    },
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                ) { index ->
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight()
+                            .padding(8.dp)
+                            .shadow(
+                                elevation = 8.dp,
+                                shape = RoundedCornerShape(24.dp)
+                            )
+                            .clip(RoundedCornerShape(24.dp))
+                            .background(cardBackground)
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(24.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            // Emoji in a circle
+                            Box(
+                                modifier = Modifier
+                                    .size(80.dp)
+                                    .clip(RoundedCornerShape(40.dp))
+                                    .background(accentColor.copy(alpha = 0.1f)),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = tips[index].first,
+                                    fontSize = 40.sp
+                                )
+                            }
+                            
+                            Spacer(modifier = Modifier.height(32.dp))
+                            
+                            // Title in orange and larger
+                            Text(
+                                text = tips[index].second,
+                                fontSize = 24.sp,
+                                color = titleColor,
+                                textAlign = TextAlign.Center,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(bottom = 8.dp)
+                            )
+                            
+                            // Description
+                            Text(
+                                text = tips[index].third,
+                                fontSize = 18.sp,
+                                color = darkGray,
+                                textAlign = TextAlign.Center,
+                                lineHeight = 26.sp
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // Navigation buttons at the bottom
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    // Previous button
+                    Button(
+                        onClick = {
+                            if (currentTipIndex > 0) {
+                                currentTipIndex--
+                            }
+                        },
+                        enabled = currentTipIndex > 0,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = if (currentTipIndex > 0) titleColor else lightGray
+                        ),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Previous",
+                            tint = white
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Previous")
+                    }
+
+                    Spacer(modifier = Modifier.width(16.dp))
+
+                    // Next button
+                    Button(
+                        onClick = {
+                            if (currentTipIndex < tips.size - 1) {
+                                currentTipIndex++
+                            }
+                        },
+                        enabled = currentTipIndex < tips.size - 1,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = if (currentTipIndex < tips.size - 1) titleColor else lightGray
+                        ),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Next")
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Icon(
+                            imageVector = Icons.Default.ArrowForward,
+                            contentDescription = "Next",
+                            tint = white
+                        )
+                    }
                 }
             }
-
-            // Button to go back to the main screen
-            Spacer(modifier = Modifier.height(20.dp))
-            Button(
-                onClick = { navController.popBackStack() },
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            ) {
-                Text("Back to Main Screen")
-            }
-        }
-    }
-}
-
-@Composable
-fun TeamworkTipItem(tip: String) {
-    // Container for each teamwork tip
-    Card(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFFF9966)),
-        shape = RoundedCornerShape(8.dp)
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = tip,
-                fontSize = 16.sp,
-                color = Color.White
-            )
         }
     }
 }

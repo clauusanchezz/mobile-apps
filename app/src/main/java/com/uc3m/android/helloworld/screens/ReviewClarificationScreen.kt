@@ -1,101 +1,238 @@
 package com.uc3m.android.helloworld.screens
 
 import android.content.Context
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReviewClarificationScreen(navController: NavController) {
-    val titleColor = Color(0xFFFF9966) // Naranja claro
-    // List of tips for reviewing and clarifying doubts
-    val tips3 = listOf(
-        "🔄 Revise your notes regularly: Go over your class notes periodically to reinforce your understanding",
-        "❓ Ask questions: Don’t hesitate to ask about concepts you don't understand",
-        "📚 Summarize key points: Make summaries or flashcards to clarify the most important topics",
-        "🧑‍🏫 Attend review sessions: Participate in review or Q&A sessions",
-        "🔍 Revisit challenging topics: Focus on the areas you find most difficult",
-        "💬 Engage in group study: Discuss difficult topics with classmates",
-        "🎯 Clarify doubts immediately: If something is unclear in class, seek clarification at the moment, don’t wait",
-        "📖 Read additional materials: Supplement your class materials with additional readings",
-        "💡 Teach others: Explaining what you’ve learned to someone else helps you understanding",
-        "🧘 Stay calm and patient: Give yourself time to process and understand complex information"
+    val titleColor = Color(0xFFFF9966)
+    val white = Color.White
+    val darkGray = Color(0xFF333333)
+    val lightGray = Color(0xFFF5F5F5)
+    val cardBackground = Color(0xFFF8F9FA)
+    val accentColor = Color(0xFF4CAF50)
+    
+    // List of tips with emojis and split into title and description
+    val tips = listOf(
+        Triple("🔄", "Revise regularly", "Go over your class notes periodically to reinforce your understanding"),
+        Triple("❓", "Ask questions", "Don't hesitate to ask about concepts you don't understand"),
+        Triple("📚", "Summarize key points", "Make summaries or flashcards to clarify the most important topics"),
+        Triple("🧑‍🏫", "Attend review sessions", "Participate in review or Q&A sessions"),
+        Triple("🔍", "Focus on challenges", "Focus on the areas you find most difficult"),
+        Triple("💬", "Study in groups", "Discuss difficult topics with classmates"),
+        Triple("🎯", "Address doubts quickly", "If something is unclear in class, seek clarification at the moment"),
+        Triple("📖", "Read extra materials", "Supplement your class materials with additional readings"),
+        Triple("💡", "Teach others", "Explaining what you've learned to someone else helps you understanding"),
+        Triple("🧘", "Stay patient", "Give yourself time to process and understand complex information")
     )
 
-    // Main container for the screen
-    Surface(modifier = Modifier.fillMaxSize().background(Color(0xFFFFFFFF)).padding(16.dp), color = Color(0xFFFFFFFF)) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+    var currentTipIndex by remember { mutableStateOf(0) }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = "Review & Clarification",
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = white
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Back",
+                            tint = white
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = titleColor
+                )
+            )
+        }
+    ) { paddingValues ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .background(white)
         ) {
-            Spacer(modifier = Modifier.height(40.dp))
-            // Title of the screen
-            Text(
-                text = "Review & Clarifications",
-                fontSize = 32.sp,
-                fontWeight = FontWeight.Bold,
-                color = titleColor,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // Title of the tips list
-            Text(
-                text = "Useful Tips",
-                fontSize = 24.sp,
-                color = titleColor,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // List of tips
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(vertical = 16.dp)
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                items(tips3) { tip3 ->
-                    TipItem3(tip3)
-                    Spacer(modifier = Modifier.height(12.dp)) // Space between tips
+                // Progress indicator and counter at the top
+                LinearProgressIndicator(
+                    progress = (currentTipIndex + 1).toFloat() / tips.size,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(8.dp)
+                        .clip(RoundedCornerShape(4.dp)),
+                    color = titleColor,
+                    trackColor = lightGray
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "Tip ${currentTipIndex + 1} of ${tips.size}",
+                    fontSize = 14.sp,
+                    color = darkGray.copy(alpha = 0.7f)
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // Tip card with fade animation
+                AnimatedContent(
+                    targetState = currentTipIndex,
+                    transitionSpec = {
+                        fadeIn(animationSpec = tween(300)) togetherWith fadeOut(animationSpec = tween(300))
+                    },
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                ) { index ->
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight()
+                            .padding(8.dp)
+                            .shadow(
+                                elevation = 8.dp,
+                                shape = RoundedCornerShape(24.dp)
+                            )
+                            .clip(RoundedCornerShape(24.dp))
+                            .background(cardBackground)
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(24.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            // Emoji in a circle
+                            Box(
+                                modifier = Modifier
+                                    .size(80.dp)
+                                    .clip(RoundedCornerShape(40.dp))
+                                    .background(accentColor.copy(alpha = 0.1f)),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = tips[index].first,
+                                    fontSize = 40.sp
+                                )
+                            }
+                            
+                            Spacer(modifier = Modifier.height(32.dp))
+                            
+                            // Title in orange and larger
+                            Text(
+                                text = tips[index].second,
+                                fontSize = 24.sp,
+                                color = titleColor,
+                                textAlign = TextAlign.Center,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(bottom = 8.dp)
+                            )
+                            
+                            // Description
+                            Text(
+                                text = tips[index].third,
+                                fontSize = 18.sp,
+                                color = darkGray,
+                                textAlign = TextAlign.Center,
+                                lineHeight = 26.sp
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // Navigation buttons at the bottom
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    // Previous button
+                    Button(
+                        onClick = {
+                            if (currentTipIndex > 0) {
+                                currentTipIndex--
+                            }
+                        },
+                        enabled = currentTipIndex > 0,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = if (currentTipIndex > 0) titleColor else lightGray
+                        ),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Previous",
+                            tint = white
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Previous")
+                    }
+
+                    Spacer(modifier = Modifier.width(16.dp))
+
+                    // Next button
+                    Button(
+                        onClick = {
+                            if (currentTipIndex < tips.size - 1) {
+                                currentTipIndex++
+                            }
+                        },
+                        enabled = currentTipIndex < tips.size - 1,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = if (currentTipIndex < tips.size - 1) titleColor else lightGray
+                        ),
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Next")
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Icon(
+                            imageVector = Icons.Default.ArrowForward,
+                            contentDescription = "Next",
+                            tint = white
+                        )
+                    }
                 }
             }
-
-            // Button to go back to the study plans screen
-            Spacer(modifier = Modifier.height(20.dp))
-            Button(
-                onClick = { navController.popBackStack() },
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            ) {
-                Text("Back to Study Plans")
-            }
-        }
-    }
-}
-
-@Composable
-fun TipItem3(tip3: String) {
-    // Container for each tip
-    Card(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFFF9966)),
-        shape = RoundedCornerShape(8.dp)
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = tip3,
-                fontSize = 16.sp,
-                color = Color.White
-            )
         }
     }
 }
