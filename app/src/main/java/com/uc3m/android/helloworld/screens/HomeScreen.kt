@@ -427,31 +427,35 @@ fun HomeScreen(
                     Text(
                         text = "\"The future belongs to those",
                         fontSize = 20.sp,
-                        color = Color.Gray,
+                        color = Color(0xFF666666),
                         fontWeight = FontWeight.Medium,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
+                        lineHeight = 26.sp
                     )
                     Text(
                         text = "who believe in the beauty",
                         fontSize = 20.sp,
-                        color = Color.Gray,
+                        color = Color(0xFF666666),
                         fontWeight = FontWeight.Medium,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
+                        lineHeight = 26.sp
                     )
                     Text(
                         text = "of their dreams\"",
                         fontSize = 20.sp,
-                        color = Color.Gray,
+                        color = Color(0xFF666666),
                         fontWeight = FontWeight.Medium,
                         textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(bottom = 8.dp)
+                        lineHeight = 26.sp,
+                        modifier = Modifier.padding(bottom = 12.dp)
                     )
                     Text(
-                        text = "Eleanor Roosevelt",
+                        text = "— Eleanor Roosevelt",
                         fontSize = 16.sp,
                         color = naranjitafondo,
                         fontWeight = FontWeight.SemiBold,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
+                        fontStyle = FontStyle.Italic
                     )
                 }
 
@@ -468,12 +472,12 @@ fun HomeScreen(
                     elevation = CardDefaults.cardElevation(
                         defaultElevation = 0.dp
                     ),
-                    shape = RoundedCornerShape(24.dp)
+                    shape = RoundedCornerShape(20.dp)
                 ) {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(24.dp)
+                            .padding(16.dp)
                     ) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -482,17 +486,17 @@ fun HomeScreen(
                         ) {
                             Text(
                                 text = "Today's Menu",
-                                fontSize = 24.sp,
+                                fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = naranjitafondo
                             )
                             Text(
                                 text = "🍽️",
-                                fontSize = 24.sp
+                                fontSize = 20.sp
                             )
                         }
                         
-                        Spacer(modifier = Modifier.height(16.dp))
+                        Spacer(modifier = Modifier.height(12.dp))
                         
                         if (subjects.isEmpty()) {
                             // Loading or error state
