@@ -50,6 +50,28 @@ class DataBaseViewModel : ViewModel() {
 
         // Load completed tests from Firestore
         loadCompletedTests()
+        
+        // Check if we need to reset daily tests
+        checkAndResetDailyTests()
+    }
+
+    private fun checkAndResetDailyTests() {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val lastResetDate = repo.getLastResetDate()
+                val currentDate = java.time.LocalDate.now()
+                
+                if (lastResetDate == null || !lastResetDate.equals(currentDate)) {
+                    // Reset completed tests for the new day
+                    repo.resetCompletedTests()
+                    _completedTests.postValue(emptySet())
+                    // Update last reset date
+                    repo.updateLastResetDate(currentDate)
+                }
+            } catch (e: Exception) {
+                Log.e("RESET_TESTS", "Error checking/resetting daily tests", e)
+            }
+        }
     }
 
     private fun loadCompletedTests() {

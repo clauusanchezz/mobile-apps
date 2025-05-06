@@ -82,6 +82,21 @@ class MainActivity : ComponentActivity() {
                         QuestionsScreen(subjectId = subjectId, unitId = unitId, navController = navController)
                     }
 
+                    // Route for navigating to ResultsScreen
+                    composable("results/{score}/{subjectName}/{correctAnswers}/{totalQuestions}") { backStackEntry ->
+                        val score = backStackEntry.arguments?.getString("score")?.toFloatOrNull() ?: 0f
+                        val subjectName = backStackEntry.arguments?.getString("subjectName") ?: ""
+                        val correctAnswers = backStackEntry.arguments?.getString("correctAnswers")?.toIntOrNull() ?: 0
+                        val totalQuestions = backStackEntry.arguments?.getString("totalQuestions")?.toIntOrNull() ?: 0
+                        ResultsScreen(
+                            score = score,
+                            subjectName = subjectName,
+                            correctAnswers = correctAnswers,
+                            totalQuestions = totalQuestions,
+                            navController = navController
+                        )
+                    }
+
                 }
             }
         }

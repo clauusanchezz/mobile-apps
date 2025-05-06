@@ -3,6 +3,8 @@ package com.uc3m.android.helloworld.screens
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.*
@@ -11,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -19,12 +22,14 @@ import com.uc3m.android.helloworld.viewmodel.DataBaseViewModel
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.uc3m.android.helloworld.data.QuestionType
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.positionInRoot
-import androidx.compose.foundation.Canvas
-
-
+import androidx.compose.foundation.clickable
+import androidx.compose.animation.*
+import androidx.compose.animation.core.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.style.TextAlign
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,19 +41,17 @@ fun QuestionsScreen(
 ) {
     val orange = Color(0xFFFF9966)
     val white = Color.White
+    val lightOrange = Color(0xFFFFE5D9)
     val green = Color(0xFF4CAF50)
     val red = Color(0xFFF44336)
 
-    // Observar las preguntas desde el ViewModel
     val questions by viewModel.questions.observeAsState(emptyList())
     val currentQuestionIndex = remember { mutableStateOf(0) }
-    val currentQuestion = questions.getOrNull(currentQuestionIndex.value)
-    val selectedAnswer = remember { mutableStateOf<String?>("") }
-    val isAnswerSelected = remember { mutableStateOf(false) }
+    val answeredQuestions = remember { mutableStateMapOf<String, String>() }
+    val hasAnsweredAnyQuestion = remember { derivedStateOf { answeredQuestions.isNotEmpty() } }
 
-    // Cargar las preguntas al inicio
     LaunchedEffect(Unit) {
-        viewModel.loadQuestionsForUnit(subjectId, unitId)  // Cargar preguntas de la unidad
+        viewModel.loadQuestionsForUnit(subjectId, unitId)
     }
 
     Scaffold(
@@ -56,7 +59,7 @@ fun QuestionsScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Questions",
+                        text = "Practice Questions",
                         fontSize = 28.sp,
                         color = white
                     )
@@ -71,86 +74,198 @@ fun QuestionsScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues),
-            color = white
+            color = lightOrange
         ) {
-            Column(
+            LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Top
+                    .padding(horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                currentQuestion?.let { question ->
-                    // Título de la pregunta
-                    Text(
-                        text = question.questionText,
-                        style = TextStyle(fontSize = 20.sp, color = Color.Black),
-                        modifier = Modifier.padding(top = 16.dp)
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    when (question.type) {
-                        QuestionType.MULTIPLE_CHOICE -> MultipleChoiceQuestion(
-                            question = question,
-                            selectedAnswer = selectedAnswer,
-                            isAnswerSelected = isAnswerSelected
-                        )
-                        QuestionType.TRUE_FALSE -> TrueFalseQuestion(
-                            question = question,
-                            selectedAnswer = selectedAnswer,
-                            isAnswerSelected = isAnswerSelected
-                        )
-                        QuestionType.SHORT_ANSWER -> ShortAnswerQuestion(
-                            question = question,
-                            selectedAnswer = selectedAnswer,
-                            isAnswerSelected = isAnswerSelected
-                        )
-                        QuestionType.MATCHING -> MatchingQuestion(
-                            question = question,
-                            selectedAnswer = selectedAnswer,
-                            isAnswerSelected = isAnswerSelected
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(32.dp))
-
-                    // Botón para avanzar a la siguiente pregunta
-                    if (currentQuestionIndex.value < questions.size - 1) {
-                        Button(
-                            onClick = {
-                                if (isAnswerSelected.value) {
-                                    currentQuestionIndex.value++
-                                    isAnswerSelected.value = false
-                                    selectedAnswer.value = ""
-                                } else {
-                                    Toast.makeText(
-                                        navController.context,
-                                        "Please select an answer",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-                            },
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(50),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = orange
-                            )
-                        ) {
-                            Text("Next Question")
+                // Show all questions up to the current one
+                items(questions.take(currentQuestionIndex.value + 1)) { question ->
+                    QuestionCard(
+                        question = question,
+                        questionNumber = questions.indexOf(question) + 1,
+                        answeredQuestions = answeredQuestions,
+                        onAnswerSelected = { questionId, answer ->
+                            answeredQuestions[questionId] = answer
+                            // Move to next question after a short delay
+                            if (currentQuestionIndex.value < questions.size - 1) {
+                                currentQuestionIndex.value++
+                            }
                         }
-                    } else {
+                    )
+                }
+
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    if (currentQuestionIndex.value == questions.size - 1 && hasAnsweredAnyQuestion.value) {
                         Button(
                             onClick = {
-                                navController.navigate("results")
+                                val score = calculateScore(questions, answeredQuestions)
+                                val correctAnswers = answeredQuestions.count { (questionId, answer) ->
+                                    val question = questions.find { it.id == questionId }
+                                    when (question?.type) {
+                                        QuestionType.SHORT_ANSWER, QuestionType.TRUE_FALSE -> 
+                                            answer.toString().toLowerCase() == question.correctAnswer?.toString()?.toLowerCase()
+                                        else -> answer == question?.correctAnswer
+                                    }
+                                }
+                                // Mark the test as completed in the HomeScreen
+                                viewModel.markTestAsCompleted(subjectId)
+                                navController.navigate("results/${score.toInt()}/$subjectId/$correctAnswers/${questions.size}")
                             },
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 16.dp),
                             shape = RoundedCornerShape(50),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = orange
                             )
                         ) {
-                            Text("View Results")
+                            Text(
+                                "View Results",
+                                fontSize = 18.sp,
+                                color = white
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+private fun calculateScore(questions: List<Question>, answeredQuestions: Map<String, String>): Float {
+    var correctAnswers = 0
+    questions.forEach { question ->
+        val userAnswer = answeredQuestions[question.id]
+        val isCorrect = when (question.type) {
+            QuestionType.SHORT_ANSWER, QuestionType.TRUE_FALSE -> {
+                if (userAnswer == null || question.correctAnswer == null) false
+                else userAnswer.toString().toLowerCase() == question.correctAnswer.toString().toLowerCase()
+            }
+            else -> userAnswer == question.correctAnswer
+        }
+        if (isCorrect) {
+            correctAnswers++
+        }
+    }
+    return (correctAnswers.toFloat() / questions.size) * 100
+}
+
+@Composable
+fun QuestionCard(
+    question: Question,
+    questionNumber: Int,
+    answeredQuestions: MutableMap<String, String>,
+    onAnswerSelected: (String, String) -> Unit
+) {
+    val userAnswer = question.id?.let { answeredQuestions[it] }
+    val isAnswered = userAnswer != null
+    val isCorrect = when (question.type) {
+        QuestionType.SHORT_ANSWER, QuestionType.TRUE_FALSE -> {
+            if (userAnswer == null || question.correctAnswer == null) false
+            else userAnswer.toString().toLowerCase() == question.correctAnswer.toString().toLowerCase()
+        }
+        else -> userAnswer == question.correctAnswer
+    }
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFFFFF5EC)
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Text(
+                text = "Question $questionNumber",
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    color = Color.Gray,
+                    fontWeight = FontWeight.Medium
+                ),
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+            Text(
+                text = question.questionText,
+                style = TextStyle(
+                    fontSize = 18.sp,
+                    color = Color.Black,
+                    fontWeight = FontWeight.Medium
+                ),
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+
+            when (question.type) {
+                QuestionType.MULTIPLE_CHOICE -> MultipleChoiceQuestion(
+                    question = question,
+                    userAnswer = userAnswer,
+                    isAnswered = isAnswered,
+                    onAnswerSelected = { answer ->
+                        question.id?.let { onAnswerSelected(it, answer) }
+                    }
+                )
+                QuestionType.TRUE_FALSE -> TrueFalseQuestion(
+                    question = question,
+                    userAnswer = userAnswer,
+                    isAnswered = isAnswered,
+                    onAnswerSelected = { answer ->
+                        question.id?.let { onAnswerSelected(it, answer) }
+                    }
+                )
+                QuestionType.SHORT_ANSWER -> ShortAnswerQuestion(
+                    question = question,
+                    userAnswer = userAnswer,
+                    isAnswered = isAnswered,
+                    onAnswerSelected = { answer ->
+                        question.id?.let { onAnswerSelected(it, answer) }
+                    }
+                )
+                QuestionType.MATCHING -> MatchingQuestion(
+                    question = question,
+                    userAnswer = userAnswer,
+                    isAnswered = isAnswered,
+                    onAnswerSelected = { answer ->
+                        question.id?.let { onAnswerSelected(it, answer) }
+                    }
+                )
+            }
+
+            // Show feedback after answering
+            if (isAnswered) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(
+                        containerColor = if (isCorrect) Color(0xFFE8F5E9) else Color(0xFFFFEBEE)
+                    ),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                    ) {
+                        Text(
+                            text = if (isCorrect) "Correct!" else "Incorrect",
+                            color = if (isCorrect) Color(0xFF2E7D32) else Color(0xFFC62828),
+                            fontWeight = FontWeight.Bold
+                        )
+                        if (!isCorrect) {
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = "Correct answer: ${question.correctAnswer}",
+                                color = Color(0xFF2E7D32)
+                            )
                         }
                     }
                 }
@@ -162,27 +277,46 @@ fun QuestionsScreen(
 @Composable
 fun MultipleChoiceQuestion(
     question: Question,
-    selectedAnswer: MutableState<String?>,
-    isAnswerSelected: MutableState<Boolean>
+    userAnswer: String?,
+    isAnswered: Boolean,
+    onAnswerSelected: (String) -> Unit
 ) {
-    question.options?.forEachIndexed { index, option ->
-        val buttonColor = when {
-            selectedAnswer.value == option -> if (option == question.correctAnswer) Color.Green else Color.Red
-            else -> Color.White
-        }
+    Column(
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        question.options?.forEach { option ->
+            val isSelected = userAnswer == option
+            val isCorrect = option == question.correctAnswer && isAnswered
 
-        Button(
-            onClick = {
-                selectedAnswer.value = option
-                isAnswerSelected.value = true
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            shape = RoundedCornerShape(50),
-            colors = ButtonDefaults.buttonColors(containerColor = buttonColor)
-        ) {
-            Text(text = option, color = Color.Black)
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        if (!isAnswered) {
+                            onAnswerSelected(option)
+                        }
+                    },
+                colors = CardDefaults.cardColors(
+                    containerColor = when {
+                        isCorrect -> Color(0xFFE8F5E9)
+                        isSelected -> Color(0xFFFFEBEE)
+                        else -> Color.White
+                    }
+                ),
+                shape = RoundedCornerShape(8.dp)
+            ) {
+                Text(
+                    text = option,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    color = when {
+                        isCorrect -> Color(0xFF2E7D32)
+                        isSelected -> Color(0xFFC62828)
+                        else -> Color.Black
+                    }
+                )
+            }
         }
     }
 }
@@ -190,42 +324,48 @@ fun MultipleChoiceQuestion(
 @Composable
 fun TrueFalseQuestion(
     question: Question,
-    selectedAnswer: MutableState<String?>,
-    isAnswerSelected: MutableState<Boolean>
+    userAnswer: String?,
+    isAnswered: Boolean,
+    onAnswerSelected: (String) -> Unit
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
-        Button(
-            onClick = {
-                selectedAnswer.value = "True"
-                isAnswerSelected.value = true
-            },
-            modifier = Modifier
-                .weight(1f)
-                .padding(8.dp),
-            shape = RoundedCornerShape(50),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (selectedAnswer.value == "True") Color.Green else Color.White
-            )
-        ) {
-            Text("True")
-        }
-        Button(
-            onClick = {
-                selectedAnswer.value = "False"
-                isAnswerSelected.value = true
-            },
-            modifier = Modifier
-                .weight(1f)
-                .padding(8.dp),
-            shape = RoundedCornerShape(50),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (selectedAnswer.value == "False") Color.Green else Color.White
-            )
-        ) {
-            Text("False")
+        listOf("True", "False").forEach { option ->
+            val isSelected = userAnswer?.toString()?.toLowerCase() == option.toLowerCase()
+            val isCorrect = option.toLowerCase() == question.correctAnswer?.toString()?.toLowerCase() && isAnswered
+
+            Card(
+                modifier = Modifier
+                    .weight(1f)
+                    .clickable {
+                        if (!isAnswered) {
+                            onAnswerSelected(option)
+                        }
+                    },
+                colors = CardDefaults.cardColors(
+                    containerColor = when {
+                        isCorrect -> Color(0xFFE8F5E9)
+                        isSelected -> Color(0xFFFFEBEE)
+                        else -> Color.White
+                    }
+                ),
+                shape = RoundedCornerShape(8.dp)
+            ) {
+                Text(
+                    text = option,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    textAlign = TextAlign.Center,
+                    color = when {
+                        isCorrect -> Color(0xFF2E7D32)
+                        isSelected -> Color(0xFFC62828)
+                        else -> Color.Black
+                    }
+                )
+            }
         }
     }
 }
@@ -233,122 +373,59 @@ fun TrueFalseQuestion(
 @Composable
 fun ShortAnswerQuestion(
     question: Question,
-    selectedAnswer: MutableState<String?>,
-    isAnswerSelected: MutableState<Boolean>
+    userAnswer: String?,
+    isAnswered: Boolean,
+    onAnswerSelected: (String) -> Unit
 ) {
-    BasicTextField(
-        value = selectedAnswer.value.orEmpty(),
-        onValueChange = {
-            selectedAnswer.value = it
-            isAnswerSelected.value = it.isNotEmpty()
-        },
-        textStyle = TextStyle(fontSize = 20.sp),
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(56.dp)
-            .padding(8.dp)
-            .background(Color.White, RoundedCornerShape(12.dp))
-    )
+    var text by remember { mutableStateOf(userAnswer ?: "") }
+    var isSubmitting by remember { mutableStateOf(false) }
+
+    Column {
+        BasicTextField(
+            value = text,
+            onValueChange = {
+                if (!isAnswered && !isSubmitting) {
+                    text = it
+                }
+            },
+            textStyle = TextStyle(
+                fontSize = 16.sp,
+                color = Color.Black
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp)
+                .clip(RoundedCornerShape(8.dp))
+                .background(Color.White)
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+        )
+
+        if (!isAnswered && text.isNotEmpty()) {
+            Spacer(modifier = Modifier.height(8.dp))
+            Button(
+                onClick = {
+                    isSubmitting = true
+                    onAnswerSelected(text)
+                },
+                modifier = Modifier.align(Alignment.End),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFFFF9966)
+                )
+            ) {
+                Text("Submit Answer")
+            }
+        }
+    }
 }
 
 @Composable
 fun MatchingQuestion(
     question: Question,
-    selectedAnswer: MutableState<String?>,
-    isAnswerSelected: MutableState<Boolean>
+    userAnswer: String?,
+    isAnswered: Boolean,
+    onAnswerSelected: (String) -> Unit
 ) {
-    val leftOptions = question.leftColumnOptions ?: emptyList() // Elementos a la izquierda
-    val rightOptions = question.rightColumnOptions ?: emptyList() // Elementos a la derecha
-
-    val matchings = remember { mutableStateOf(mutableMapOf<String, String>()) }
-    val leftPositions = remember { mutableStateOf<MutableList<Offset>>(mutableListOf()) }
-    val rightPositions = remember { mutableStateOf<MutableList<Offset>>(mutableListOf()) }
-
-
-    // Column layout for matching question
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            leftOptions.forEachIndexed { index, leftOption ->
-                Button(
-                    onClick = {
-                        matchings.value[leftOption] = rightOptions[index] // Emparejar
-                        isAnswerSelected.value = true
-                    },
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(8.dp)
-                        .onGloballyPositioned { coordinates ->
-                            // Guardar las posiciones de los elementos de la izquierda
-                            val position = coordinates.positionInRoot()
-                            leftPositions.value.add(position)
-                        },
-                    shape = RoundedCornerShape(50),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.White)
-                ) {
-                    Text(text = leftOption, color = Color.Black)
-                }
-            }
-        }
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            rightOptions.forEachIndexed { index, rightOption ->
-                Button(
-                    onClick = {
-                        matchings.value[rightOption] = leftOptions[index] // Emparejar
-                        isAnswerSelected.value = true
-                    },
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(8.dp)
-                        .onGloballyPositioned { coordinates ->
-                            // Guardar las posiciones de los elementos de la derecha
-                            val position = coordinates.positionInRoot()
-                            rightPositions.value.add(position)
-                        },
-                    shape = RoundedCornerShape(50),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.White)
-                ) {
-                    Text(text = rightOption, color = Color.Black)
-                }
-            }
-        }
-
-        // Dibujar las líneas de emparejamiento
-        Canvas(modifier = Modifier.fillMaxSize()) {
-            matchings.value.forEach { (leftOption, rightOption) ->
-                val leftIndex = leftOptions.indexOf(leftOption)
-                val rightIndex = rightOptions.indexOf(rightOption)
-
-                // Obtener las posiciones de los elementos emparejados
-                val leftPos = leftPositions.value.getOrNull(leftIndex) ?: Offset(0f, 0f)
-                val rightPos = rightPositions.value.getOrNull(rightIndex) ?: Offset(0f, 0f)
-
-                // Dibujar una línea entre los elementos emparejados
-                drawLine(
-                    color = Color.Blue, // Color de la línea
-                    start = leftPos.copy(y = leftPos.y + 50), // Ajusta según la altura de los botones
-                    end = rightPos.copy(y = rightPos.y + 50), // Ajusta según la altura de los botones
-                    strokeWidth = 4f
-                )
-            }
-        }
-
-        // Muestra los emparejamientos
-        Spacer(modifier = Modifier.height(16.dp))
-        Text("Matched pairs:")
-        matchings.value.forEach { (left, right) ->
-            Text("$left -> $right")
-        }
-    }
+    // Implementation for matching questions
+    Text("Matching question type not implemented yet")
 }
 

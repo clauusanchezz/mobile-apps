@@ -70,29 +70,29 @@ fun HomeScreen(
     // State for daily tests and their completion status
     var dailyTests by remember { mutableStateOf(emptyList<Triple<String, String, Boolean>>()) }
 
-    // Update daily tests when subjects change
+    // Generate daily tests only once when subjects are loaded
     LaunchedEffect(subjects) {
-        if (subjects.isNotEmpty()) {
-            // Get 3 random subjects if we don't have daily tests yet
-            if (dailyTests.isEmpty()) {
-                val selectedSubjects = subjects.shuffled().take(3)
-                dailyTests = selectedSubjects.mapNotNull { subject ->
-                    subject.id?.let { id -> 
-                        Triple(
-                            subject.name, 
-                            id, 
-                            completedTests.contains(id)
-                        )
-                    }
+        if (subjects.isNotEmpty() && dailyTests.isEmpty()) {
+            // Get 3 random subjects
+            val selectedSubjects = subjects.shuffled().take(3)
+            dailyTests = selectedSubjects.mapNotNull { subject ->
+                subject.id?.let { id -> 
+                    Triple(
+                        subject.name, 
+                        id, 
+                        completedTests.contains(id)
+                    )
                 }
             }
         }
     }
 
-    // Update daily tests when completed tests change
+    // Update completion status when completed tests change
     LaunchedEffect(completedTests) {
-        dailyTests = dailyTests.map { (name, id, _) ->
-            Triple(name, id, completedTests.contains(id))
+        if (dailyTests.isNotEmpty()) {
+            dailyTests = dailyTests.map { (name, id, _) ->
+                Triple(name, id, completedTests.contains(id))
+            }
         }
     }
 

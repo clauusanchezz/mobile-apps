@@ -20,6 +20,7 @@ class FirestoreRepository {
     private val unitsCollection = firestore.collection("units")
     private val questionsCollection = firestore.collection("questions")
     private val completedTestsCollection = firestore.collection("completed_tests")
+    private val userConfigCollection = firestore.collection("user_config")
 
     companion object {
         const val CONFIG_COLLECTION = "config"
@@ -344,6 +345,57 @@ class FirestoreRepository {
             }
         } catch (e: Exception) {
             Log.e("MARK_COMPLETED", "Error marking test as completed", e)
+        }
+    }
+
+    suspend fun getLastResetDate(): java.time.LocalDate? {
+        return try {
+            val auth = FirebaseAuth.getInstance()
+            val userId = auth.currentUser?.uid ?: return null
+            
+            val snapshot = userConfigCollection
+                .document(userId)
+                .get()
+                .await()
+            
+            val data = snapshot.data
+            if (data != null && data.containsKey("lastResetDate")) {
+                val dateStr = data["lastResetDate"] as? String
+                dateStr?.let { java.time.LocalDate.parse(it) }
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            Log.e("GET_RESET_DATE", "Error getting last reset date", e)
+            null
+        }
+    }
+
+    suspend fun updateLastResetDate(date: java.time.LocalDate) {
+        try {
+            val auth = FirebaseAuth.getInstance()
+            val userId = auth.currentUser?.uid ?: return
+            
+            userConfigCollection
+                .document(userId)
+                .set(mapOf("lastResetDate" to date.toString()))
+                .await()
+        } catch (e: Exception) {
+            Log.e("UPDATE_RESET_DATE", "Error updating last reset date", e)
+        }
+    }
+
+    suspend fun resetCompletedTests() {
+        try {
+            val auth = FirebaseAuth.getInstance()
+            val userId = auth.currentUser?.uid ?: return
+            
+            completedTestsCollection
+                .document(userId)
+                .delete()
+                .await()
+        } catch (e: Exception) {
+            Log.e("RESET_TESTS", "Error resetting completed tests", e)
         }
     }
 
