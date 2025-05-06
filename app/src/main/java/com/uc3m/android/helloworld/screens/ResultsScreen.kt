@@ -21,7 +21,7 @@ fun ResultsScreen(
     totalQuestions: Int
 ) {
     val orange = Color(0xFFFF9966)
-    val white = Color.White
+    val white = Color(0xFFFFFFFF)
     val lightGray = Color(0xFFF5F5F5)
     val darkGray = Color(0xFF333333)
 
