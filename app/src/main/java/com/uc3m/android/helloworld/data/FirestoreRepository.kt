@@ -4,6 +4,7 @@ import android.util.Log
 import android.util.Log.e
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.FieldValue
@@ -15,6 +16,10 @@ import kotlinx.coroutines.tasks.await
 class FirestoreRepository {
 
     private val firestore = FirebaseFirestore.getInstance()
+    private val subjectsCollection = firestore.collection("subjects")
+    private val unitsCollection = firestore.collection("units")
+    private val questionsCollection = firestore.collection("questions")
+    private val completedTestsCollection = firestore.collection("completed_tests")
 
     companion object {
         const val CONFIG_COLLECTION = "config"
@@ -295,8 +300,52 @@ class FirestoreRepository {
             .await()
     }
 
+    suspend fun getCompletedTests(): Set<String> {
+        return try {
+            val auth = FirebaseAuth.getInstance()
+            val userId = auth.currentUser?.uid ?: return emptySet()
+            
+            val snapshot = completedTestsCollection
+                .document(userId)
+                .get()
+                .await()
+            
+            val data = snapshot.data
+            if (data != null && data.containsKey("completed")) {
+                @Suppress("UNCHECKED_CAST")
+                (data["completed"] as? List<String>)?.toSet() ?: emptySet()
+            } else {
+                emptySet()
+            }
+        } catch (e: Exception) {
+            Log.e("GET_COMPLETED", "Error getting completed tests", e)
+            emptySet()
+        }
+    }
 
-
+    suspend fun markTestAsCompleted(subjectId: String) {
+        try {
+            val auth = FirebaseAuth.getInstance()
+            val userId = auth.currentUser?.uid ?: return
+            
+            val userDoc = completedTestsCollection.document(userId)
+            val currentData = userDoc.get().await().data
+            
+            val completedList = if (currentData != null && currentData.containsKey("completed")) {
+                @Suppress("UNCHECKED_CAST")
+                (currentData["completed"] as? List<String>)?.toMutableList() ?: mutableListOf()
+            } else {
+                mutableListOf()
+            }
+            
+            if (!completedList.contains(subjectId)) {
+                completedList.add(subjectId)
+                userDoc.set(mapOf("completed" to completedList))
+            }
+        } catch (e: Exception) {
+            Log.e("MARK_COMPLETED", "Error marking test as completed", e)
+        }
+    }
 
 }
 

@@ -63,24 +63,49 @@ fun HomeScreen(
 
     // Observe subjects
     val subjects by viewModel.subjects.observeAsState(emptyList())
+    
+    // Observe completed tests
+    val completedTests by viewModel.completedTests.observeAsState(emptySet())
 
-    // State for random tests
-    var randomTests by remember { mutableStateOf(emptyList<Pair<String, String>>()) }
+    // State for daily tests and their completion status
+    var dailyTests by remember { mutableStateOf(emptyList<Triple<String, String, Boolean>>()) }
 
-    // Update random tests when subjects change
+    // Update daily tests when subjects change
     LaunchedEffect(subjects) {
         if (subjects.isNotEmpty()) {
-            // Get 3 random subjects
-            val selectedSubjects = subjects.shuffled().take(3)
-            randomTests = selectedSubjects.mapNotNull { subject ->
-                subject.id?.let { id -> subject.name to id }
+            // Get 3 random subjects if we don't have daily tests yet
+            if (dailyTests.isEmpty()) {
+                val selectedSubjects = subjects.shuffled().take(3)
+                dailyTests = selectedSubjects.mapNotNull { subject ->
+                    subject.id?.let { id -> 
+                        Triple(
+                            subject.name, 
+                            id, 
+                            completedTests.contains(id)
+                        )
+                    }
+                }
             }
+        }
+    }
+
+    // Update daily tests when completed tests change
+    LaunchedEffect(completedTests) {
+        dailyTests = dailyTests.map { (name, id, _) ->
+            Triple(name, id, completedTests.contains(id))
         }
     }
 
     // This would come from your user's data
     val currentLevel = 2
     val progress = 0.75f // 75% progress to next level
+
+    // Function to mark a test as completed
+    fun markTestAsCompleted(subjectId: String) {
+        dailyTests = dailyTests.map { (name, id, completed) ->
+            if (id == subjectId) Triple(name, id, true) else Triple(name, id, completed)
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -511,29 +536,32 @@ fun HomeScreen(
                                 )
                             }
                         } else {
-                            // Random Test Links
-                            randomTests.forEach { (subjectName, subjectId) ->
+                            // Daily Test Links
+                            dailyTests.forEach { (subjectName, subjectId, completed) ->
                                 PracticeTestLink(
                                     emoji = getSubjectEmoji(subjectName),
                                     title = "$subjectName Quiz",
-                                    subtitle = "Test your knowledge with a quick quiz",
+                                    subtitle = if (completed) "Completed! 🎉" else "Test your knowledge with a quick quiz",
                                     onClick = {
-                                        viewModel.loadUnitsForSubject(subjectId)
-                                        val unitId = when (subjectId.lowercase()) {
-                                            "maths" -> "u1maths"
-                                            "science" -> "u1science"
-                                            "geo" -> "u1geo"
-                                            "history" -> "u1history"
-                                            "bio" -> "u1bio"
-                                            "spanish" -> "u1spanish"
-                                            "english" -> "u1english"
-                                            else -> "${subjectId}1"
+                                        if (!completed) {
+                                            viewModel.loadUnitsForSubject(subjectId)
+                                            val unitId = when (subjectId.lowercase()) {
+                                                "maths" -> "u1maths"
+                                                "science" -> "u1science"
+                                                "geo" -> "u1geo"
+                                                "history" -> "u1history"
+                                                "bio" -> "u1bio"
+                                                "spanish" -> "u1spanish"
+                                                "english" -> "u1english"
+                                                else -> "${subjectId}1"
+                                            }
+                                            viewModel.loadQuestionsForUnit(subjectId, unitId)
+                                            navController.navigate("questions_screen/${subjectId}/${unitId}")
                                         }
-                                        viewModel.loadQuestionsForUnit(subjectId, unitId)
-                                        navController.navigate("questions_screen/${subjectId}/${unitId}")
-                                    }
+                                    },
+                                    completed = completed
                                 )
-                                if (randomTests.last() != Pair(subjectName, subjectId)) {
+                                if (dailyTests.last() != Triple(subjectName, subjectId, completed)) {
                                     Spacer(modifier = Modifier.height(12.dp))
                                 }
                             }
@@ -550,14 +578,15 @@ private fun PracticeTestLink(
     emoji: String,
     title: String,
     subtitle: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    completed: Boolean = false
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White
+            containerColor = if (completed) Color(0xFFE8F5E9) else Color.White
         ),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 2.dp
@@ -575,13 +604,13 @@ private fun PracticeTestLink(
                 modifier = Modifier
                     .size(48.dp)
                     .background(
-                        color = Color(0xFF4CAF50).copy(alpha = 0.1f),
+                        color = if (completed) Color(0xFF4CAF50).copy(alpha = 0.2f) else Color(0xFF4CAF50).copy(alpha = 0.1f),
                         shape = CircleShape
                     ),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = emoji,
+                    text = if (completed) "✅" else emoji,
                     fontSize = 24.sp
                 )
             }
@@ -596,12 +625,12 @@ private fun PracticeTestLink(
                     text = title,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF333333)
+                    color = if (completed) Color(0xFF2E7D32) else Color(0xFF333333)
                 )
                 Text(
                     text = subtitle,
                     fontSize = 14.sp,
-                    color = Color(0xFF666666)
+                    color = if (completed) Color(0xFF2E7D32) else Color(0xFF666666)
                 )
             }
         }

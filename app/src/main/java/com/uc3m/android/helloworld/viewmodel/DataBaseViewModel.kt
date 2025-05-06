@@ -33,6 +33,9 @@ class DataBaseViewModel : ViewModel() {
     private val _questions = MutableLiveData<List<Question>>()
     val questions: LiveData<List<Question>> get() = _questions
 
+    private val _completedTests = MutableLiveData<Set<String>>(emptySet())
+    val completedTests: LiveData<Set<String>> = _completedTests
+
     private var subjectsListenerRegistration: ListenerRegistration? = null
     private var unitsListenerRegistration: ListenerRegistration? = null
     private var questionsListenerRegistration: ListenerRegistration? = null
@@ -40,10 +43,24 @@ class DataBaseViewModel : ViewModel() {
     init {
         _databaseInitialized.value = false
 
-        // Observa los cambios en el repositorio y actualiza los LiveData del ViewModel
+        // Observe repository changes
         repo.subjectsLiveData.observeForever { _subjects.postValue(it) }
         repo.unitsLiveData.observeForever { _units.postValue(it) }
         repo.questionsLiveData.observeForever { _questions.postValue(it) }
+
+        // Load completed tests from Firestore
+        loadCompletedTests()
+    }
+
+    private fun loadCompletedTests() {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val completed = repo.getCompletedTests()
+                _completedTests.postValue(completed)
+            } catch (e: Exception) {
+                Log.e("LOAD_COMPLETED", "Error loading completed tests", e)
+            }
+        }
     }
 
     fun initializeDatabase() {
@@ -363,8 +380,19 @@ class DataBaseViewModel : ViewModel() {
         }
     }
 
-
-
-
+    fun markTestAsCompleted(subjectId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                // Update local state
+                val currentCompleted = _completedTests.value ?: emptySet()
+                _completedTests.postValue(currentCompleted + subjectId)
+                
+                // Persist to Firestore
+                repo.markTestAsCompleted(subjectId)
+            } catch (e: Exception) {
+                Log.e("MARK_COMPLETED", "Error marking test as completed", e)
+            }
+        }
+    }
 
 }
