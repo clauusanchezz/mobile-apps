@@ -28,16 +28,21 @@ class MainActivity : ComponentActivity() {
         // Create and observe ViewModel
         dbViewModel = ViewModelProvider(this)[DataBaseViewModel::class.java]
 
-        lifecycleScope.launch {
-            // TODO NO FUNCIONA
-            //dbViewModel.resetInitializationFlag()
-            // Initialize the database if not initialized
-            if (dbViewModel.isInitialized.value != true) {
-            dbViewModel.initializeDatabase() // Initialize database if not initialized
-            } else {
-                //dbViewModel.startListeningToSubjects() // Start listening to subjects if initialized
+
+        // When `isInitialized` flips to true, start your subjects listener exactly once
+        dbViewModel.isInitialized.observe(this) { initialized ->
+            if (initialized) {
+                dbViewModel.startListeningSubjects()
+
+                // Added later, update db,
+                dbViewModel.seedGeoMapUnits()
+
             }
         }
+
+        // Seed your database (will only actually run once, because the repo tracks that flag)
+        dbViewModel.initializeDatabase()
+
 
         setContent {
             HelloWorldTheme {
@@ -49,14 +54,14 @@ class MainActivity : ComponentActivity() {
                     composable("signup") { SignUpScreen(navController) }
                     composable("subjects") {
                         // Observe subjects from the ViewModel
-                        val subjects = dbViewModel.subjects.observeAsState(emptyList()).value
                         SubjectScreen(navController, dbViewModel)
                     }
                     composable("study_plans") { StudyPlansScreen(navController) }
                     composable("study_progress") { StudyProgressScreen(navController) }
                     composable("offline_mode") { OfflineModeScreen(navController) }
                     composable("offline_mode/{subject}") { backStackEntry ->
-                        val subject = backStackEntry.arguments?.getString("subject") ?: return@composable
+                        val subject =
+                            backStackEntry.arguments?.getString("subject") ?: return@composable
                         OfflineModeScreen(navController)
                     }
                     composable("study_plans") { StudyPlansScreen(navController) }
@@ -69,25 +74,35 @@ class MainActivity : ComponentActivity() {
                     composable("educational_facts") { EducationalFactsScreen(navController) }
                     composable("profile_settings") { ProfileSettingsScreen(navController) }
 
-                    // Route for navigating to UnitScreen
-                    composable("units/{subjectName}") { backStackEntry ->
-                        val subjectName = backStackEntry.arguments?.getString("subjectName") ?: return@composable
-                        UnitScreen(subjectName = subjectName, navController = navController)
+                    composable("units/{subjectId}") { back ->
+                        val subjectId = back.arguments!!.getString("subjectId")!!
+                        UnitScreen(subjectId = subjectId, navController = navController)
                     }
 
                     // Route for navigating to QuestionsScreen
                     composable("questions_screen/{subjectId}/{unitId}") { backStackEntry ->
-                        val subjectId = backStackEntry.arguments?.getString("subjectId") ?: return@composable
-                        val unitId = backStackEntry.arguments?.getString("unitId") ?: return@composable
-                        QuestionsScreen(subjectId = subjectId, unitId = unitId, navController = navController)
+                        val subjectId =
+                            backStackEntry.arguments?.getString("subjectId") ?: return@composable
+                        val unitId =
+                            backStackEntry.arguments?.getString("unitId") ?: return@composable
+                        QuestionsScreen(
+                            subjectId = subjectId,
+                            unitId = unitId,
+                            navController = navController
+                        )
                     }
 
                     // Route for navigating to ResultsScreen
                     composable("results/{score}/{subjectName}/{correctAnswers}/{totalQuestions}") { backStackEntry ->
-                        val score = backStackEntry.arguments?.getString("score")?.toFloatOrNull() ?: 0f
+                        val score =
+                            backStackEntry.arguments?.getString("score")?.toFloatOrNull() ?: 0f
                         val subjectName = backStackEntry.arguments?.getString("subjectName") ?: ""
-                        val correctAnswers = backStackEntry.arguments?.getString("correctAnswers")?.toIntOrNull() ?: 0
-                        val totalQuestions = backStackEntry.arguments?.getString("totalQuestions")?.toIntOrNull() ?: 0
+                        val correctAnswers =
+                            backStackEntry.arguments?.getString("correctAnswers")?.toIntOrNull()
+                                ?: 0
+                        val totalQuestions =
+                            backStackEntry.arguments?.getString("totalQuestions")?.toIntOrNull()
+                                ?: 0
                         ResultsScreen(
                             score = score,
                             subjectName = subjectName,
@@ -104,7 +119,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        // Stop listening to subjects and units when the activity is destroyed
-        dbViewModel.stopListening()
+        dbViewModel.stopListeningAll()
     }
 }
+

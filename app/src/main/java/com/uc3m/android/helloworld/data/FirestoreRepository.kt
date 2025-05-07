@@ -16,9 +16,6 @@ import kotlinx.coroutines.tasks.await
 class FirestoreRepository {
 
     private val firestore = FirebaseFirestore.getInstance()
-    private val subjectsCollection = firestore.collection("subjects")
-    private val unitsCollection = firestore.collection("units")
-    private val questionsCollection = firestore.collection("questions")
     private val completedTestsCollection = firestore.collection("completed_tests")
     private val userConfigCollection = firestore.collection("user_config")
 

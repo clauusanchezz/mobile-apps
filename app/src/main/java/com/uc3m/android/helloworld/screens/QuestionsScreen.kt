@@ -45,13 +45,14 @@ fun QuestionsScreen(
     val green = Color(0xFF4CAF50)
     val red = Color(0xFFF44336)
 
-    val questions by viewModel.questions.observeAsState(emptyList())
+    // observe only the 5 random questions we load once
+    val questions by viewModel.randomQuestions.observeAsState(emptyList())
     val currentQuestionIndex = remember { mutableStateOf(0) }
     val answeredQuestions = remember { mutableStateMapOf<String, String>() }
     val hasAnsweredAnyQuestion = remember { derivedStateOf { answeredQuestions.isNotEmpty() } }
 
-    LaunchedEffect(Unit) {
-        viewModel.loadQuestionsForUnit(subjectId, unitId)
+    LaunchedEffect(subjectId, unitId) {
+        viewModel.loadRandomQuestions(subjectId, unitId)
     }
 
     Scaffold(

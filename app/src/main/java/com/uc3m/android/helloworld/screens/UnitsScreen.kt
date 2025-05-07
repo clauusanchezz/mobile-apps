@@ -31,11 +31,14 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.foundation.lazy.items
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UnitScreen(
-    subjectName: String,
+    subjectId: String,
     navController: NavController,
     viewModel: DataBaseViewModel = viewModel()
 ) {
@@ -48,18 +51,26 @@ fun UnitScreen(
     // Observe units from ViewModel
     val units by viewModel.units.observeAsState(emptyList())
 
-    // Load units on start
-    LaunchedEffect(Unit) {
-        viewModel.loadUnitsForSubject(subjectName)
+
+    // Start real-time listening as soon as subjectId changes
+    LaunchedEffect(subjectId) {
+        viewModel.startListeningUnits(subjectId)
     }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
+                    // Optional: look up the display name
+                    val displayName = viewModel.subjects
+                        .observeAsState(emptyList())
+                        .value
+                        .find { it.id == subjectId }
+                        ?.name
+                        ?: subjectId
                     Column {
                         Text(
-                            text = subjectName,
+                            text = displayName,
                             fontSize = 28.sp,
                             fontWeight = FontWeight.Bold,
                             color = white
@@ -143,14 +154,14 @@ fun UnitScreen(
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                     contentPadding = PaddingValues(bottom = 16.dp)
                 ) {
-                    items(units.size) { index ->
-                        val unit = units[index]
+                    items(units) { unit -> // new
                         UnitCard(
                             unit = unit,
                             onClick = {
-                                navController.navigate("questions_screen/${subjectName}/${unit.id}")
+                                navController.navigate("questions_screen/${subjectId}/${unit.id}")
                             }
                         )
+
                     }
                 }
             }

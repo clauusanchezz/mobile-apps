@@ -33,10 +33,10 @@ fun SubjectScreen(navController: NavController, viewModel: DataBaseViewModel = v
     // Observe subjects from the ViewModel
     val subjects by viewModel.subjects.observeAsState(emptyList())
 
-    // Load subjects when the screen is first composed
-    LaunchedEffect(Unit) {
-        viewModel.loadSubjects()
-    }
+    // Load subjects when the screen is first composed // TODO remove
+//    LaunchedEffect(Unit) {
+//        viewModel.loadSubjects()
+//    }
 
     // Scaffold = main layout with top and bottom bars
     Scaffold(

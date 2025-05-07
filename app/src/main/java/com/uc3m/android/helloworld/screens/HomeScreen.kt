@@ -56,11 +56,6 @@ fun HomeScreen(
         username = authHelper.getCurrentUsername() ?: "User"
     }
 
-    // Load subjects and questions when the screen is created
-    LaunchedEffect(Unit) {
-        viewModel.loadSubjects()
-    }
-
     // Observe subjects
     val subjects by viewModel.subjects.observeAsState(emptyList())
     
@@ -544,7 +539,7 @@ fun HomeScreen(
                                     subtitle = if (completed) "Completed! 🎉" else "Test your knowledge with a quick quiz",
                                     onClick = {
                                         if (!completed) {
-                                            viewModel.loadUnitsForSubject(subjectId)
+                                            // just navigate—QuestionsScreen will pull 5 random questions for you
                                             val unitId = when (subjectId.lowercase()) {
                                                 "maths" -> "u1maths"
                                                 "science" -> "u1science"
@@ -555,8 +550,7 @@ fun HomeScreen(
                                                 "english" -> "u1english"
                                                 else -> "${subjectId}1"
                                             }
-                                            viewModel.loadQuestionsForUnit(subjectId, unitId)
-                                            navController.navigate("questions_screen/${subjectId}/${unitId}")
+                                            navController.navigate("questions_screen/$subjectId/$unitId")
                                         }
                                     },
                                     completed = completed
