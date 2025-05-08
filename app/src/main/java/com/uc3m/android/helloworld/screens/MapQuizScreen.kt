@@ -50,12 +50,12 @@ fun MapQuizScreen(
                     val feature = features.getJSONObject(i)
                     val properties = feature.getJSONObject("properties")
                     
-                    // Determinar qué propiedad usar según el tipo de mapa
+                    // Determine what property we have to use according to the map that we need
                     val areaName = when (question.unitId) {
                         "u4geo" -> properties.getString("NAME_1")  // Comunidades autónomas
-                        "u5geo" -> properties.getString("NAME_2")  // Provincias
-                        "u6geo" -> properties.getString("name")    // Europa
-                        else -> properties.getString("name")       // Por defecto
+                        "u5geo" -> properties.getString("NAME_2")  // Provinces
+                        "u6geo" -> properties.getString("name")    // Europe
+                        else -> properties.getString("name")       // By default
                     }
                     
                     val geometry = feature.getJSONObject("geometry")
@@ -73,11 +73,11 @@ fun MapQuizScreen(
                         }
                         result.add(PolygonData(areaName, polygonPoints))
                     } else if (geometryType == "MultiPolygon") {
-                        // Para MultiPolygon, procesamos cada polígono exterior
+                        // For MultiPolygon, process each exterior
                         for (k in 0 until coordinates.length()) {
                             val polygonPoints = mutableListOf<LatLng>()
                             val polygonCoords = coordinates.getJSONArray(k)
-                            // Tomamos el primer anillo de coordenadas (el exterior)
+                            // First circle of coordinates (the exterior)
                             val coords = polygonCoords.getJSONArray(0)
                             for (j in 0 until coords.length()) {
                                 val point = coords.getJSONArray(j)
@@ -95,7 +95,7 @@ fun MapQuizScreen(
                 emptyList()
             }
         }
-        // Guardar la respuesta correcta para colorear después
+        // Save the answer to colour it later
         correctArea = question.correctAnswer?.toString()
     }
     
@@ -129,9 +129,9 @@ fun MapQuizScreen(
             }
             
             val initialCameraPosition = when (question.unitId) {
-                "u4geo", "u5geo" -> CameraPosition.fromLatLngZoom(LatLng(40.4637, -3.7492), 5.5f) // España
-                "u6geo" -> CameraPosition.fromLatLngZoom(LatLng(54.5260, 15.2551), 3.5f) // Europa
-                else -> CameraPosition.fromLatLngZoom(LatLng(40.4637, -3.7492), 5.5f) // Por defecto España
+                "u4geo", "u5geo" -> CameraPosition.fromLatLngZoom(LatLng(40.4637, -3.7492), 5.5f) // Spain
+                "u6geo" -> CameraPosition.fromLatLngZoom(LatLng(54.5260, 15.2551), 3.5f) // Europe
+                else -> CameraPosition.fromLatLngZoom(LatLng(40.4637, -3.7492), 5.5f) // By default Spain
             }
 
             val cameraPositionState = rememberCameraPositionState {
@@ -148,9 +148,9 @@ fun MapQuizScreen(
                     val isSelected = selectedArea == polygonData.areaName
                     val isCorrectArea = correctArea == polygonData.areaName
                     val fillColor = when {
-                        answered && isSelected && isCorrect == true -> Color(0xFF4CAF50).copy(alpha = 0.5f) // Verde si es correcta
-                        answered && isSelected && isCorrect == false -> Color(0xFFF44336).copy(alpha = 0.5f) // Rojo si es incorrecta
-                        answered && isCorrect == false && isCorrectArea -> Color(0xFF4CAF50).copy(alpha = 0.5f) // Verde para la correcta si falló
+                        answered && isSelected && isCorrect == true -> Color(0xFF4CAF50).copy(alpha = 0.5f) // Green - correct
+                        answered && isSelected && isCorrect == false -> Color(0xFFF44336).copy(alpha = 0.5f) // Red - incorrect
+                        answered && isCorrect == false && isCorrectArea -> Color(0xFF4CAF50).copy(alpha = 0.5f) // Green - correct if they commited a mistake
                         isSelected -> orange.copy(alpha = 0.5f)
                         else -> lightOrange.copy(alpha = 0.3f)
                     }

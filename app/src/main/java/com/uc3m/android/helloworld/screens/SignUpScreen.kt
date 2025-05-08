@@ -92,7 +92,6 @@ fun SignUpScreen(navController: NavHostController) {
                 style = MaterialTheme.typography.headlineLarge,
                 modifier = Modifier.padding(top = 30.dp)
             )
-            //Text(text = "Create Account", fontSize = 30.sp, style = MaterialTheme.typography.headlineMedium)
             Spacer(modifier = Modifier.height(30.dp))
 
             //Username field

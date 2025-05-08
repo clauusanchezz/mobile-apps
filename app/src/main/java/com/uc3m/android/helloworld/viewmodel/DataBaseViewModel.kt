@@ -257,10 +257,10 @@ class DataBaseViewModel : ViewModel() {
     private var unitsReg: ListenerRegistration?    = null
     private var questionsReg: ListenerRegistration? = null
 
-    // LiveData que expones directamente desde el repo:
+    // LiveData directly from the repo
     val subjects: LiveData<List<Subject>> = repo.subjectsLiveData
     val units:    LiveData<List<SubjectUnit>> = repo.unitsLiveData
-    // (aunque para questions usaremos carga puntual, puedes exponerlo si quieres)
+    // however for the questions we use the loads
 
     fun startListeningSubjects() {
         subjectsReg?.remove()
@@ -391,7 +391,6 @@ class DataBaseViewModel : ViewModel() {
     }
 
     // UPDATE DB WITHOUT INITIALIZING. ONLY IN DEBUG MODE
-    // DEBUG-ONLY: seed geo-map units and their questions without reinitializing the entire database
     fun seedGeoMapUnits() {
         viewModelScope.launch(Dispatchers.IO) {
             try {

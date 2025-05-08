@@ -24,8 +24,8 @@ import androidx.navigation.NavController
 @Composable
 fun StudyPlansScreen(navController: NavController?) {
     val whiteColor = Color(0xFFFFFFFF)
-    val naranjitafondo = Color(0xFFFF9966) // Fondo naranja para el topBar
-    val blackColor = Color(0xFF000000) // Color negro para el texto del título
+    val naranjitafondo = Color(0xFFFF9966) // Orange background
+    val blackColor = Color(0xFF000000) // Black for the title
 
     val studyPlans = listOf(
         "📚 Exams" to "exams_preparation",
@@ -44,12 +44,12 @@ fun StudyPlansScreen(navController: NavController?) {
                         "Study Plans & Tips",
                         fontSize = 32.sp,
                         fontWeight = FontWeight.ExtraBold,
-                        color = whiteColor // Título blanco
+                        color = whiteColor // white title
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = naranjitafondo, // Fondo naranja
-                    titleContentColor = whiteColor // Título blanco
+                    containerColor = naranjitafondo,
+                    titleContentColor = whiteColor
                 ),
             )
         },
@@ -227,12 +227,12 @@ fun StudyPlansScreen(navController: NavController?) {
             }
         }
     ) { paddingValues ->
-        // Contenido de la pantalla debajo del TopAppBar
+        // Content below the top bar
         Surface(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues),
-            color = whiteColor // Fondo blanco
+            color = whiteColor
         ) {
             Column(
                 modifier = Modifier.fillMaxSize(),
@@ -240,17 +240,17 @@ fun StudyPlansScreen(navController: NavController?) {
             ) {
                 Spacer(modifier = Modifier.height(40.dp))
 
-                // Lista en zigzag con círculos grandes y más juntos
+                // Circles in zigzag
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.spacedBy((-30).dp), // Se solapan un poco
+                    verticalArrangement = Arrangement.spacedBy((-30).dp),
                     contentPadding = PaddingValues(vertical = 16.dp)
                 ) {
                     itemsIndexed(studyPlans) { index, (plan, destination) ->
                         StudyPlanItem(
                             plan = plan,
                             onClick = { navController?.navigate(destination) },
-                            alignLeft = index % 2 == 0 // Alterna la alineación
+                            alignLeft = index % 2 == 0
                         )
                     }
                 }
@@ -261,7 +261,7 @@ fun StudyPlansScreen(navController: NavController?) {
 
 @Composable
 fun StudyPlanItem(plan: String, onClick: () -> Unit, alignLeft: Boolean) {
-    val buttonColor = Color(0xFFFF9966) // Naranja claro
+    val buttonColor = Color(0xFFFF9966) // orange
 
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -270,9 +270,9 @@ fun StudyPlanItem(plan: String, onClick: () -> Unit, alignLeft: Boolean) {
         Button(
             onClick = onClick,
             modifier = Modifier
-                .size(190.dp), // Círculos más grandes
+                .size(190.dp), // Big circles
             colors = ButtonDefaults.buttonColors(containerColor = buttonColor),
-            shape = CircleShape // Botón completamente circular
+            shape = CircleShape // Circular bottom
         ) {
             Text(
                 text = plan,

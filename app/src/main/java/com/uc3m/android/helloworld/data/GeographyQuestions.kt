@@ -429,7 +429,7 @@ class GeographyQuestions {
     }
 
     fun generateSpanishProvincesMapQuestions(spanishProvincesId: String): List<Question> {
-        // Los nombres deben coincidir exactamente con la propiedad NAME_2 de spain_provincias.geojson
+        // LNames that coincide with NAME_2 de spain_provincias.geojson
         val provinces = listOf(
             "Álava",
             "Albacete",
@@ -495,7 +495,7 @@ class GeographyQuestions {
             )
         }
 
-        // 2) Preguntas de “provincia capital” para 6 comunidades
+        // Capital-Community questions
         val communityCapitals = mapOf(
             "Andalusia"           to "Sevilla",
             "Catalonia"           to "Barcelona",
@@ -526,7 +526,7 @@ class GeographyQuestions {
 
 
     fun generateEuropeMapQuestions(europeId: String): List<Question> {
-        // 1) Lista de países tal cual aparecen en europe.geojson → properties.name
+        // Names that coincide with europe.geojson → properties.name
         val countries = listOf(
             "Albania", "Austria", "Belarus", "Belgium", "Bosnia and Herz.",
             "Bulgaria", "Croatia", "Czechia", "Denmark", "Estonia",
@@ -539,7 +539,7 @@ class GeographyQuestions {
             "Ukraine", "United Kingdom"
         )
 
-        // 2) Mapa capital → país
+        // capital → country
         val capitalToCountry = mapOf(
             "Tirana"           to "Albania",
             "Vienna"           to "Austria",
@@ -555,7 +555,7 @@ class GeographyQuestions {
             "Budapest"         to "Hungary"
         )
 
-        // Generación de preguntas “Tap the country of X”
+        // Generate questions “Tap the country of X”
         val countryQuestions = countries.mapIndexed { idx, country ->
             Question(
                 questionText   = "Tap the country of $country",
@@ -569,7 +569,7 @@ class GeographyQuestions {
             )
         }
 
-        // Generación de preguntas “Tap the country whose capital is Y”
+        // Generate questions “Tap the country whose capital is Y”
         val capitalQuestions = capitalToCountry.entries.mapIndexed { idx, (capital, country) ->
             Question(
                 questionText   = "Tap the country whose capital is $capital",
@@ -579,7 +579,7 @@ class GeographyQuestions {
                 geoJsonAsset   = "europe.geojson",
                 regionProperty = "name",
                 difficulty     = Difficult.HARD,
-                // Continuamos la numeración después de countries.size
+                // to avoid repeating IDs of country questions
                 id             = "q${countries.size + idx + 1}eur_cap"
             )
         }

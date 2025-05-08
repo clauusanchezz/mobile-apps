@@ -33,10 +33,6 @@ fun SubjectScreen(navController: NavController, viewModel: DataBaseViewModel = v
     // Observe subjects from the ViewModel
     val subjects by viewModel.subjects.observeAsState(emptyList())
 
-    // Load subjects when the screen is first composed // TODO remove
-//    LaunchedEffect(Unit) {
-//        viewModel.loadSubjects()
-//    }
 
     // Scaffold = main layout with top and bottom bars
     Scaffold(
@@ -235,12 +231,12 @@ fun SubjectScreen(navController: NavController, viewModel: DataBaseViewModel = v
         }
     ) { paddingValues ->
         // Main content
-        // El contenido de la pantalla se ajusta debajo de la barra superior
+        // The content adjusts below the bar
         Surface(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues), // Para no sobreponer el contenido con la topBar
-            color = Color.White // Fondo blanco para el contenido
+                .padding(paddingValues), // to avoid overlay la topBar
+            color = Color.White // white background for the content
         ) {
             Column(
                 modifier = Modifier

@@ -134,12 +134,12 @@ class FirestoreRepository {
         // Check if the subject already exists by name
         val existingSubject = getSubjectByName(subject.name)
         return if (existingSubject == null) {
-            val docRef = firestore.collection(SUBJECTS_COLLECTION).document(subjectId) // Usar el ID proporcionado
-            val subjectWithId = subject.copy(id = subjectId) // Asegurarse de que se conserva el ID proporcionado
-            docRef.set(subjectWithId).await() // Establecer la asignatura con el ID proporcionado
-            docRef.id // El ID será el que has proporcionado
+            val docRef = firestore.collection(SUBJECTS_COLLECTION).document(subjectId) // Use Id
+            val subjectWithId = subject.copy(id = subjectId)
+            docRef.set(subjectWithId).await() // Establish the subject with the ID
+            docRef.id
         } else {
-            existingSubject.id ?: throw IllegalStateException("Subject ID is null but should not be") // Manejar el caso donde el ID de la asignatura es null
+            existingSubject.id ?: throw IllegalStateException("Subject ID is null but should not be") // if ID is null
         }
     }
 
@@ -161,45 +161,44 @@ class FirestoreRepository {
 
     suspend fun addUnitToSubject(unit: SubjectUnit, subjectId: String): String {
         try {
-            // Log para indicar que estamos comprobando la unidad por nombre
+            // Log to know that we are checking the subject by name
             Log.d("FirestoreDebug", "Checking if unit '${unit.name}' exists in subject with ID '$subjectId'")
 
             // Check if the unit already exists by name
             val existingUnit = getUnitByName(unit.name, subjectId)
 
             return if (existingUnit == null) {
-                // Log para indicar que la unidad no existe
+                // If the unit does not exist
                 Log.d("FirestoreDebug", "Unit '${unit.name}' does not exist. Proceeding to create it.")
 
-                // Usar el ID proporcionado por el parámetro unit.id
+                // Used id given
                 val unitId = unit.id ?: "default-id-${System.currentTimeMillis()}"
 
-                // Log del ID de la unidad que se va a usar
                 Log.d("FirestoreDebug", "Using unit ID: $unitId")
 
                 val docRef = firestore.collection(SUBJECTS_COLLECTION)
                     .document(subjectId)
                     .collection(UNITS_SUBCOLLECTION)
-                    .document(unitId) // Usar el ID proporcionado
+                    .document(unitId)
 
-                val unitWithId = unit.copy(id = unit.id) // Asegurarte de que se conserva el ID proporcionado
+                val unitWithId = unit.copy(id = unit.id)
 
-                // Log para confirmar que estamos escribiendo en Firestore
+                // To check that we are writting in firestore
                 Log.d("FirestoreDebug", "Writing new unit to Firestore with ID: $unitId")
 
                 docRef.set(unitWithId).await()
 
-                // Log de confirmación después de que la escritura fue exitosa
+                // To know that it works correctly
                 Log.d("FirestoreDebug", "Unit successfully added with ID: ${docRef.id}")
 
-                docRef.id // El ID será el que has proporcionado
+                docRef.id
             } else {
-                // Log para indicar que la unidad ya existe y estamos usando su ID
+                // The unit already exists
                 Log.d("FirestoreDebug", "Unit '${unit.name}' already exists. Reusing existing ID: ${existingUnit.id}")
                 existingUnit.id ?: throw IllegalStateException("Unit ID is null but should not be") // Reuse existing ID
             }
         } catch (e: Exception) {
-            // Log en caso de que ocurra un error
+            // Handle error
             Log.e("FirestoreDebug", "Error adding unit to subject: ${e.message}", e)
             throw e // Re-throw the exception after logging it
         }
@@ -236,15 +235,15 @@ class FirestoreRepository {
         // Check if the question already exists by text (or any other unique identifier)
         val existingQuestion = getQuestionByText(question.questionText, subjectId, unitId)
         if (existingQuestion == null) {
-            // Usar el ID proporcionado por el parámetro questionId o generar uno nuevo
+            // Use the id given or generate a new one
             val docRef = firestore.collection(SUBJECTS_COLLECTION)
                 .document(subjectId)
                 .collection(UNITS_SUBCOLLECTION)
                 .document(unitId)
                 .collection(QUESTIONS_SUBCOLLECTION)
-                .document(question.id ?: "default-id-${System.currentTimeMillis()}") // Usar el ID proporcionado o generar uno dinámicamente
+                .document(question.id ?: "default-id-${System.currentTimeMillis()}")
 
-            val questionWithId = question.copy(id = question.id ?: docRef.id) // Asegurarse de que se conserva el ID proporcionado
+            val questionWithId = question.copy(id = question.id ?: docRef.id)
             docRef.set(questionWithId).await()
         }
     }
