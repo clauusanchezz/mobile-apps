@@ -179,27 +179,6 @@ fun LoginScreen(navController: NavHostController) {
                     )
                 )
             }
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            // Language selection flags
-            Row(
-                modifier = Modifier.padding(8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.spain_flag),
-                    contentDescription = "Spanish Flag",
-                    modifier = Modifier.size(40.dp)
-                )
-
-                Image(
-                    painter = painterResource(id = R.drawable.uk_flag),
-                    contentDescription = "UK Flag",
-                    modifier = Modifier.size(40.dp)
-                )
-            }
         }
     }
 }

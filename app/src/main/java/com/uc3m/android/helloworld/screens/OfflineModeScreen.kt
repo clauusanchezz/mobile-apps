@@ -272,7 +272,7 @@ fun OfflineModeScreen(navController: NavController) {
                                     Icon(
                                         imageVector = Icons.Default.Home,
                                         contentDescription = "Home",
-                                        tint = Color(0xFFFF9966),
+                                        tint = Color.White,
                                         modifier = Modifier.size(24.dp)
                                     )
                                 }
@@ -310,7 +310,7 @@ fun OfflineModeScreen(navController: NavController) {
                             }
                         },
                         selected = false,
-                        onClick = { navController.navigate("study_progress") },
+                        onClick = { navController.navigate("educational_facts") },
                         label = null,
                         colors = NavigationBarItemDefaults.colors(
                             selectedIconColor = Color.Transparent,

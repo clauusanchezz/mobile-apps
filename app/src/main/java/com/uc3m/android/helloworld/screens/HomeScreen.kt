@@ -37,7 +37,7 @@ import androidx.compose.runtime.livedata.observeAsState
 fun HomeScreen(
     navController: NavController,
     viewModel: DataBaseViewModel = viewModel()
-) {
+) { 
     val whiteColor = Color(0xFFFFFFFF)
     val blackColor = Color(0xFF000000)
     val naranjitafondo = Color(0xFFFF9966)
@@ -58,7 +58,7 @@ fun HomeScreen(
 
     // Observe subjects
     val subjects by viewModel.subjects.observeAsState(emptyList())
-    
+
     // Observe completed tests
     val completedTests by viewModel.completedTests.observeAsState(emptySet())
 
@@ -71,10 +71,10 @@ fun HomeScreen(
             // Get 3 random subjects
             val selectedSubjects = subjects.shuffled().take(3)
             dailyTests = selectedSubjects.mapNotNull { subject ->
-                subject.id?.let { id -> 
+                subject.id?.let { id ->
                     Triple(
-                        subject.name, 
-                        id, 
+                        subject.name,
+                        id,
                         completedTests.contains(id)
                     )
                 }
@@ -90,10 +90,6 @@ fun HomeScreen(
             }
         }
     }
-
-    // This would come from your user's data
-    val currentLevel = 2
-    val progress = 0.75f // 75% progress to next level
 
     // Function to mark a test as completed
     fun markTestAsCompleted(subjectId: String) {
@@ -147,13 +143,6 @@ fun HomeScreen(
                                 onClick = {
                                     showMenu = false
                                     navController.navigate("profile_settings")
-                                }
-                            )
-                            DropdownMenuItem(
-                                text = { Text("Dictionary") },
-                                onClick = {
-                                    showMenu = false
-                                    navController.navigate("educational_facts")
                                 }
                             )
                             DropdownMenuItem(
@@ -296,7 +285,7 @@ fun HomeScreen(
                             }
                         },
                         selected = false,
-                        onClick = { navController.navigate("study_progress") },
+                        onClick = { navController.navigate("educational_facts") },
                         label = null,
                         colors = NavigationBarItemDefaults.colors(
                             selectedIconColor = Color.Transparent,
@@ -392,49 +381,6 @@ fun HomeScreen(
                     )
                 }
 
-                // Simple Level Display
-                Text(
-                    text = "${(progress * 100).toInt()}%",
-                    fontSize = 16.sp,
-                    color = naranjitafondo,
-                    fontWeight = FontWeight.Medium,
-                    modifier = Modifier.padding(bottom = 4.dp)
-                )
-                LinearProgressIndicator(
-                    progress = progress,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(4.dp)
-                        .clip(RoundedCornerShape(2.dp)),
-                    color = naranjitafondo,
-                    trackColor = backgroundColor.copy(alpha = 0.2f)
-                )
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Level ${currentLevel}",
-                        fontSize = 16.sp,
-                        color = Color.Gray,
-                        fontWeight = FontWeight.Medium
-                    )
-                    Box(
-                        modifier = Modifier
-                            .size(32.dp)
-                            .background(backgroundColor.copy(alpha = 0.1f), CircleShape),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "⭐",
-                            fontSize = 16.sp
-                        )
-                    }
-                }
-
                 Spacer(modifier = Modifier.weight(0.5f))
 
                 // Motivational Quote
@@ -517,46 +463,167 @@ fun HomeScreen(
                         }
                         
                         Spacer(modifier = Modifier.height(12.dp))
-                        
-                        if (subjects.isEmpty()) {
-                            // Loading or error state
-                            Box(
+
+                        // Practice Test Links
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { navController.navigate("questions_screen/maths/u1maths") },
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color.White
+                            ),
+                            elevation = CardDefaults.cardElevation(
+                                defaultElevation = 2.dp
+                            ),
+                            shape = RoundedCornerShape(12.dp)
+                        ) {
+                            Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(32.dp),
-                                contentAlignment = Alignment.Center
+                                    .padding(12.dp),
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                CircularProgressIndicator(
-                                    color = naranjitafondo
-                                )
+                                Box(
+                                    modifier = Modifier
+                                        .size(48.dp)
+                                        .background(
+                                            color = Color(0xFF4CAF50).copy(alpha = 0.1f),
+                                            shape = CircleShape
+                                        ),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = "🧮",
+                                        fontSize = 24.sp
+                                    )
+                                }
+                                
+                                Spacer(modifier = Modifier.width(12.dp))
+                                
+                                Column(
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    Text(
+                                        text = "Maths Quiz",
+                                        fontSize = 16.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color(0xFF333333)
+                                    )
+                                    Text(
+                                        text = "Test your knowledge with a quick quiz",
+                                        fontSize = 14.sp,
+                                        color = Color(0xFF666666)
+                                    )
+                                }
                             }
-                        } else {
-                            // Daily Test Links
-                            dailyTests.forEach { (subjectName, subjectId, completed) ->
-                                PracticeTestLink(
-                                    emoji = getSubjectEmoji(subjectName),
-                                    title = "$subjectName Quiz",
-                                    subtitle = if (completed) "Completed! 🎉" else "Test your knowledge with a quick quiz",
-                                    onClick = {
-                                        if (!completed) {
-                                            // just navigate—QuestionsScreen will pull 5 random questions for you
-                                            val unitId = when (subjectId.lowercase()) {
-                                                "maths" -> "u1maths"
-                                                "science" -> "u1science"
-                                                "geo" -> "u1geo"
-                                                "history" -> "u1history"
-                                                "bio" -> "u1bio"
-                                                "spanish" -> "u1spanish"
-                                                "english" -> "u1english"
-                                                else -> "${subjectId}1"
-                                            }
-                                            navController.navigate("questions_screen/$subjectId/$unitId")
-                                        }
-                                    },
-                                    completed = completed
-                                )
-                                if (dailyTests.last() != Triple(subjectName, subjectId, completed)) {
-                                    Spacer(modifier = Modifier.height(12.dp))
+                        }
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { navController.navigate("questions_screen/science/u1science") },
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color.White
+                            ),
+                            elevation = CardDefaults.cardElevation(
+                                defaultElevation = 2.dp
+                            ),
+                            shape = RoundedCornerShape(12.dp)
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(12.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(48.dp)
+                                        .background(
+                                            color = Color(0xFF4CAF50).copy(alpha = 0.1f),
+                                            shape = CircleShape
+                                        ),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = "🔬",
+                                        fontSize = 24.sp
+                                    )
+                                }
+                                
+                                Spacer(modifier = Modifier.width(12.dp))
+                                
+                                Column(
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    Text(
+                                        text = "Science Quiz",
+                                        fontSize = 16.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color(0xFF333333)
+                                    )
+                                    Text(
+                                        text = "Test your knowledge with a quick quiz",
+                                        fontSize = 14.sp,
+                                        color = Color(0xFF666666)
+                                    )
+                                }
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { navController.navigate("questions_screen/geo/u1geo") },
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color.White
+                            ),
+                            elevation = CardDefaults.cardElevation(
+                                defaultElevation = 2.dp
+                            ),
+                            shape = RoundedCornerShape(12.dp)
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(12.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(48.dp)
+                                        .background(
+                                            color = Color(0xFF4CAF50).copy(alpha = 0.1f),
+                                            shape = CircleShape
+                                        ),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = "🌍",
+                                        fontSize = 24.sp
+                                    )
+                                }
+                                
+                                Spacer(modifier = Modifier.width(12.dp))
+                                
+                                Column(
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    Text(
+                                        text = "Geography Quiz",
+                                        fontSize = 16.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color(0xFF333333)
+                                    )
+                                    Text(
+                                        text = "Test your knowledge with a quick quiz",
+                                        fontSize = 14.sp,
+                                        color = Color(0xFF666666)
+                                    )
                                 }
                             }
                         }
@@ -608,9 +675,9 @@ private fun PracticeTestLink(
                     fontSize = 24.sp
                 )
             }
-            
+
             Spacer(modifier = Modifier.width(12.dp))
-            
+
             // Title and Subtitle
             Column(
                 modifier = Modifier.weight(1f)

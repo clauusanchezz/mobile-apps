@@ -57,7 +57,6 @@ class MainActivity : ComponentActivity() {
                         SubjectScreen(navController, dbViewModel)
                     }
                     composable("study_plans") { StudyPlansScreen(navController) }
-                    composable("study_progress") { StudyProgressScreen(navController) }
                     composable("offline_mode") { OfflineModeScreen(navController) }
                     composable("offline_mode/{subject}") { backStackEntry ->
                         val subject =

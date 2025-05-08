@@ -184,7 +184,7 @@ fun StudyPlansScreen(navController: NavController?) {
                             }
                         },
                         selected = false,
-                        onClick = { navController?.navigate("study_progress") },
+                        onClick = { navController?.navigate("educational_facts") },
                         label = null,
                         colors = NavigationBarItemDefaults.colors(
                             selectedIconColor = Color.Transparent,
