@@ -391,42 +391,58 @@ class DataBaseViewModel : ViewModel() {
     }
 
     // UPDATE DB WITHOUT INITIALIZING. ONLY IN DEBUG MODE
+    // DEBUG-ONLY: seed geo-map units and their questions without reinitializing the entire database
     fun seedGeoMapUnits() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                // 1) Spanish Map
-                val spanishMapId = "u4geo_spanishMap"
+                // 1) Spanish Autonomous Communities Map
+                val communitiesMapId = "u4geo"
                 addUnit(
-                    subjectId     = "geo",
-                    unitName      = "Spanish Map",
-                    unitCustomId  = spanishMapId
+                    subjectId    = "geo",
+                    unitName     = "Spanish Autonomous Communities Map",
+                    unitCustomId = communitiesMapId
                 )
-                // Genera preguntas de geografía para “Spanish Map”
-               /* val spanishMapQs = geoQuestions.generateSpanishMapQuestions(spanishMapId)
+                // Generate and add the community‐map questions
+                val communitiesQs = geoQuestions.generateSpanishAutonomousCommunitiesMapQuestions(communitiesMapId)
                 addQuestions(
                     subjectId = "geo",
-                    unitId    = spanishMapId,
-                    questions = spanishMapQs
-                )*/
-
-                // 2) Europe Map
-                val europeMapId = "u5geo_europeMap"
-                addUnit(
-                    subjectId     = "geo",
-                    unitName      = "Europe Map",
-                    unitCustomId  = europeMapId
+                    unitId    = communitiesMapId,
+                    questions = communitiesQs
                 )
-                // Genera preguntas de geografía para “Europe Map”
-               // val europeMapQs = geoQuestions.generateEuropeMapQuestions(europeMapId)
-                /*addQuestions(
+
+                // 2) Spanish Provinces Map
+                val provincesMapId = "u5geo"
+                addUnit(
+                    subjectId    = "geo",
+                    unitName     = "Spanish Provinces Map",
+                    unitCustomId = provincesMapId
+                )
+                // Generate and add the province‐map questions
+                val provincesQs = geoQuestions.generateSpanishProvincesMapQuestions(provincesMapId)
+                addQuestions(
+                    subjectId = "geo",
+                    unitId    = provincesMapId,
+                    questions = provincesQs
+                )
+
+                // 3) Europe Map
+                val europeMapId = "u6geo"
+                addUnit(
+                    subjectId    = "geo",
+                    unitName     = "Europe Map",
+                    unitCustomId = europeMapId
+                )
+                // Generate and add the Europe‐map questions
+                val europeQs = geoQuestions.generateEuropeMapQuestions(europeMapId)
+                addQuestions(
                     subjectId = "geo",
                     unitId    = europeMapId,
-                    questions = europeMapQs
-                )*/
+                    questions = europeQs
+                )
 
-                Log.d("DB_SEED", "Geography map units seeded")
+                Log.d("DB_SEED", "Map units and questions have been seeded successfully")
             } catch (e: Exception) {
-                Log.e("DB_SEED", "Error seeding geo map units", e)
+                Log.e("DB_SEED", "Error while seeding geo map units", e)
             }
         }
     }

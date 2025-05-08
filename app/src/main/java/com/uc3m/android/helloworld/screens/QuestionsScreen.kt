@@ -30,6 +30,11 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.platform.LocalContext
+import android.content.Context
+import java.io.IOException
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -239,6 +244,14 @@ fun QuestionCard(
                         question.id?.let { onAnswerSelected(it, answer) }
                     }
                 )
+                QuestionType.MAP -> MapQuestion(
+                    question = question,
+                    userAnswer = userAnswer,
+                    isAnswered = isAnswered,
+                    onAnswerSelected = { answer ->
+                        question.id?.let { onAnswerSelected(it, answer) }
+                    }
+                )
             }
 
             // Show feedback after answering
@@ -263,10 +276,23 @@ fun QuestionCard(
                         )
                         if (!isCorrect) {
                             Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = "Correct answer: ${question.correctAnswer}",
-                                color = Color(0xFF2E7D32)
-                            )
+                            val isMapUnit = question.unitId == "u4geo" || question.unitId == "u5geo" || question.unitId == "u6geo"
+                            if (isMapUnit) {
+                                Text(
+                                    text = "You selected: ${userAnswer}",
+                                    color = Color(0xFFC62828)
+                                )
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text(
+                                    text = "Correct answer: ${question.correctAnswer}",
+                                    color = Color(0xFF2E7D32)
+                                )
+                            } else {
+                                Text(
+                                    text = "Correct answer: ${question.correctAnswer}",
+                                    color = Color(0xFF2E7D32)
+                                )
+                            }
                         }
                     }
                 }
@@ -428,5 +454,48 @@ fun MatchingQuestion(
 ) {
     // Implementation for matching questions
     Text("Matching question type not implemented yet")
+}
+
+@Composable
+fun MapQuestion(
+    question: Question,
+    userAnswer: String?,
+    isAnswered: Boolean,
+    onAnswerSelected: (String) -> Unit
+) {
+    val geojsonData = loadGeoJsonData(question.unitId ?: "")
+    
+    Column {
+        MapQuizScreen(
+            question = question,
+            geojsonData = geojsonData,
+            onAreaSelected = { areaName ->
+                if (!isAnswered) {
+                    onAnswerSelected(areaName)
+                }
+            }
+        )
+    }
+}
+
+@Composable
+fun loadGeoJsonData(unitId: String): String {
+    val context = LocalContext.current
+    val fileName = when (unitId) {
+        "u4geo" -> "spain_communities.geojson"    // Spanish Communities
+        "u5geo" -> "spain_provincias.geojson"     // Spanish Provinces
+        "u6geo" -> "europe.geojson"               // European Countries
+        else -> "europe.geojson"                  // Default map
+    }
+    return readGeoJsonFromAssets(context, fileName) ?: ""
+}
+
+fun readGeoJsonFromAssets(context: Context, fileName: String): String? {
+    return try {
+        context.assets.open(fileName).bufferedReader().use { it.readText() }
+    } catch (e: IOException) {
+        e.printStackTrace()
+        null
+    }
 }
 
