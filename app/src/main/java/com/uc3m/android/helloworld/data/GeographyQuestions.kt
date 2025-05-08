@@ -59,21 +59,6 @@ class GeographyQuestions {
                 unitId = physicalGeographyId
             ),
 
-            // MATCHING - MEDIUM
-            Question(
-                id = "q7geo1",
-                questionText = "Match the landform with its feature.",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("Mountain", "Valley", "Island"),
-                rightColumnOptions = listOf("High elevation", "Low land between hills", "Surrounded by water"),
-                correctAnswer = mapOf(
-                    "Mountain" to "High elevation",
-                    "Valley" to "Low land between hills",
-                    "Island" to "Surrounded by water"
-                ),
-                difficulty = Difficult.MEDIUM,
-                unitId = physicalGeographyId
-            ),
 
             // SHORT ANSWER - MEDIUM
             Question(
@@ -111,22 +96,6 @@ class GeographyQuestions {
                 options = listOf("Rift valley", "Mid-ocean ridge", "Mountain range", "Ocean trench"),
                 correctAnswer = "Mountain range",
                 difficulty = Difficult.MEDIUM,
-                unitId = physicalGeographyId
-            ),
-
-            // MATCHING - HARD
-            Question(
-                id = "q12geo1",
-                questionText = "Match the geological event with its cause.",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("Earthquake", "Volcano", "Tsunami"),
-                rightColumnOptions = listOf("Seafloor movement", "Magma eruption", "Fault slip"),
-                correctAnswer = mapOf(
-                    "Earthquake" to "Fault slip",
-                    "Volcano" to "Magma eruption",
-                    "Tsunami" to "Seafloor movement"
-                ),
-                difficulty = Difficult.HARD,
                 unitId = physicalGeographyId
             ),
 
@@ -221,22 +190,6 @@ class GeographyQuestions {
                 unitId = climateId
             ),
 
-            // MATCHING - MEDIUM
-            Question(
-                id = "q7climate2",
-                questionText = "Match the climate zone with its main characteristic.",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("Tropical", "Temperate", "Polar"),
-                rightColumnOptions = listOf("Hot and humid", "Four seasons", "Cold year-round"),
-                correctAnswer = mapOf(
-                    "Tropical" to "Hot and humid",
-                    "Temperate" to "Four seasons",
-                    "Polar" to "Cold year-round"
-                ),
-                difficulty = Difficult.MEDIUM,
-                unitId = climateId
-            ),
-
             // SHORT ANSWER - MEDIUM
             Question(
                 id = "q8climate2",
@@ -273,22 +226,6 @@ class GeographyQuestions {
                 options = listOf("Hot and dry all year", "Mild wet winters, hot dry summers", "Cold and snowy", "Rainy all year"),
                 correctAnswer = "Mild wet winters, hot dry summers",
                 difficulty = Difficult.MEDIUM,
-                unitId = climateId
-            ),
-
-            // MATCHING - HARD
-            Question(
-                id = "q12climate2",
-                questionText = "Match the weather instrument with what it measures.",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("Barometer", "Anemometer", "Hygrometer"),
-                rightColumnOptions = listOf("Air pressure", "Wind speed", "Humidity"),
-                correctAnswer = mapOf(
-                    "Barometer" to "Air pressure",
-                    "Anemometer" to "Wind speed",
-                    "Hygrometer" to "Humidity"
-                ),
-                difficulty = Difficult.HARD,
                 unitId = climateId
             ),
 
@@ -384,22 +321,6 @@ class GeographyQuestions {
                 id = "q6geo3"
             ),
 
-            // MATCHING - MEDIUM
-            Question(
-                questionText = "Match the economic sector with its main activity.",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("Primary", "Secondary", "Tertiary"),
-                rightColumnOptions = listOf("Raw materials", "Manufacturing", "Services"),
-                correctAnswer = mapOf(
-                    "Primary" to "Raw materials",
-                    "Secondary" to "Manufacturing",
-                    "Tertiary" to "Services"
-                ),
-                difficulty = Difficult.MEDIUM,
-                unitId = populationEconomicsId,
-                id = "q7geo3"
-            ),
-
             // SHORT ANSWER - MEDIUM
             Question(
                 questionText = "What is the term for the movement of people from rural to urban areas?",
@@ -437,26 +358,6 @@ class GeographyQuestions {
                 difficulty = Difficult.MEDIUM,
                 unitId = populationEconomicsId,
                 id = "q11geo3"
-            ),
-
-            // MATCHING - HARD
-            Question(
-                questionText = "Match the demographic term with its definition.",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("Emigration", "Birth rate", "Life expectancy"),
-                rightColumnOptions = listOf(
-                    "Number of people leaving a country",
-                    "Average number of years a person is expected to live",
-                    "Number of births per 1,000 people per year"
-                ),
-                correctAnswer = mapOf(
-                    "Emigration" to "Number of people leaving a country",
-                    "Birth rate" to "Number of births per 1,000 people per year",
-                    "Life expectancy" to "Average number of years a person is expected to live"
-                ),
-                difficulty = Difficult.HARD,
-                unitId = populationEconomicsId,
-                id = "q12geo3"
             ),
 
             // SHORT ANSWER - HARD

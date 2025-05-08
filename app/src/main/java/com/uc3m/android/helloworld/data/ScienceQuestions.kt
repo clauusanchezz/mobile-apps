@@ -105,21 +105,6 @@ class ScienceQuestions {
             ),
 
             Question(
-                id = "q12science1",
-                questionText = "Match each law of motion with its description:",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("Newton's First Law", "Newton's Second Law", "Newton's Third Law"),
-                rightColumnOptions = listOf("Force equals mass times acceleration.", "Every action has an equal and opposite reaction.", "An object will remain at rest unless acted upon by an external force."),
-                correctAnswer = mapOf(
-                    "Newton's First Law" to "An object will remain at rest unless acted upon by an external force.",
-                    "Newton's Second Law" to "Force equals mass times acceleration.",
-                    "Newton's Third Law" to "Every action has an equal and opposite reaction."
-                ),
-                difficulty = Difficult.HARD,
-                unitId = kinematicsDynamicsId
-            ),
-
-            Question(
                 id = "q13science1",
                 questionText = "The acceleration due to gravity decreases with height above the Earth's surface.",
                 type = QuestionType.TRUE_FALSE,
@@ -208,22 +193,6 @@ class ScienceQuestions {
                 unitId = workEnergyPowerId
             ),
 
-            // MATCHING - MEDIUM
-            Question(
-                id = "q7science2",
-                questionText = "Match the quantities with their correct units.",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("Work", "Power", "Force", "Energy"),
-                rightColumnOptions = listOf("Joule", "Watt", "Newton", "Joule"),
-                correctAnswer = mapOf(
-                    "Work" to "Joule",
-                    "Power" to "Watt",
-                    "Force" to "Newton",
-                    "Energy" to "Joule"
-                ),
-                difficulty = Difficult.MEDIUM,
-                unitId = workEnergyPowerId
-            ),
 
             // SHORT ANSWER - MEDIUM
             Question(
@@ -264,22 +233,6 @@ class ScienceQuestions {
                 unitId = workEnergyPowerId
             ),
 
-            // MATCHING - HARD
-            Question(
-                id = "q12science2",
-                questionText = "Match each type of energy with an example.",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("Kinetic", "Potential", "Thermal", "Chemical"),
-                rightColumnOptions = listOf("Moving car", "Stretched spring", "Boiling water", "Battery"),
-                correctAnswer = mapOf(
-                    "Kinetic" to "Moving car",
-                    "Potential" to "Stretched spring",
-                    "Thermal" to "Boiling water",
-                    "Chemical" to "Battery"
-                ),
-                difficulty = Difficult.HARD,
-                unitId = workEnergyPowerId
-            ),
 
             // SHORT ANSWER - HARD
             Question(
@@ -373,26 +326,6 @@ class ScienceQuestions {
                 unitId = forcesNewtonLawsId
             ),
 
-            // MATCHING - MEDIUM
-            Question(
-                id = "q7science3",
-                questionText = "Match the law with its description.",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("First Law", "Second Law", "Third Law"),
-                rightColumnOptions = listOf(
-                    "For every action, there is an equal and opposite reaction",
-                    "F = ma",
-                    "An object at rest stays at rest"
-                ),
-                correctAnswer = mapOf(
-                    "First Law" to "An object at rest stays at rest",
-                    "Second Law" to "F = ma",
-                    "Third Law" to "For every action, there is an equal and opposite reaction"
-                ),
-                difficulty = Difficult.MEDIUM,
-                unitId = forcesNewtonLawsId
-            ),
-
             // SHORT ANSWER - MEDIUM
             Question(
                 id = "q8science3",
@@ -432,22 +365,6 @@ class ScienceQuestions {
                 unitId = forcesNewtonLawsId
             ),
 
-            // MATCHING - HARD
-            Question(
-                id = "q12science3",
-                questionText = "Match the quantity with its type.",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("Force", "Mass", "Acceleration", "Friction"),
-                rightColumnOptions = listOf("Vector", "Scalar", "Vector", "Force"),
-                correctAnswer = mapOf(
-                    "Force" to "Vector",
-                    "Mass" to "Scalar",
-                    "Acceleration" to "Vector",
-                    "Friction" to "Force"
-                ),
-                difficulty = Difficult.HARD,
-                unitId = forcesNewtonLawsId
-            ),
 
             // SHORT ANSWER - HARD
             Question(
@@ -541,22 +458,6 @@ class ScienceQuestions {
                 id = "q6science4"
             ),
 
-            // MATCHING - MEDIUM
-            Question(
-                questionText = "Match the particle to its charge.",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("Proton", "Electron", "Neutron"),
-                rightColumnOptions = listOf("Positive", "Negative", "Neutral"),
-                correctAnswer = mapOf(
-                    "Proton" to "Positive",
-                    "Electron" to "Negative",
-                    "Neutron" to "Neutral"
-                ),
-                difficulty = Difficult.MEDIUM,
-                unitId = atomicStructurePeriodicTableId,
-                id = "q7science4"
-            ),
-
             // SHORT ANSWER - MEDIUM
             Question(
                 questionText = "How many electrons does a neutral oxygen atom have?",
@@ -601,21 +502,6 @@ class ScienceQuestions {
                 id = "q11science4"
             ),
 
-            // MATCHING - HARD
-            Question(
-                questionText = "Match each group to its property.",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("Group 1", "Group 17", "Group 18"),
-                rightColumnOptions = listOf("Very reactive metals", "Noble gases", "Very reactive nonmetals"),
-                correctAnswer = mapOf(
-                    "Group 1" to "Very reactive metals",
-                    "Group 17" to "Very reactive nonmetals",
-                    "Group 18" to "Noble gases"
-                ),
-                difficulty = Difficult.HARD,
-                unitId = atomicStructurePeriodicTableId,
-                id = "q12science4"
-            ),
 
             // SHORT ANSWER - HARD
             Question(
@@ -709,21 +595,6 @@ class ScienceQuestions {
                 id = "q6science5"
             ),
 
-            // MATCHING - MEDIUM
-            Question(
-                questionText = "Match the type of bond with its description.",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("Ionic", "Covalent", "Metallic"),
-                rightColumnOptions = listOf("Electron transfer", "Electron sharing", "Delocalized electrons"),
-                correctAnswer = mapOf(
-                    "Ionic" to "Electron transfer",
-                    "Covalent" to "Electron sharing",
-                    "Metallic" to "Delocalized electrons"
-                ),
-                difficulty = Difficult.MEDIUM,
-                unitId = chemicalBondingId,
-                id = "q7science5"
-            ),
 
             // SHORT ANSWER - MEDIUM
             Question(
@@ -769,21 +640,6 @@ class ScienceQuestions {
                 id = "q11science5"
             ),
 
-            // MATCHING - HARD
-            Question(
-                questionText = "Match each compound to its bond type.",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("NaCl", "H2O", "Cu"),
-                rightColumnOptions = listOf("Covalent", "Metallic", "Ionic"),
-                correctAnswer = mapOf(
-                    "NaCl" to "Ionic",
-                    "H2O" to "Covalent",
-                    "Cu" to "Metallic"
-                ),
-                difficulty = Difficult.HARD,
-                unitId = chemicalBondingId,
-                id = "q12science5"
-            ),
 
             // SHORT ANSWER - HARD
             Question(

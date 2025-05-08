@@ -59,22 +59,6 @@ class HistoryQuestions {
                 unitId = ancientHistoryId
             ),
 
-            // MATCHING - MEDIUM
-            Question(
-                id = "q7history1",
-                questionText = "Match each civilization with a key achievement.",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("Romans", "Greeks", "Prehistoric Humans"),
-                rightColumnOptions = listOf("Invention of the wheel", "Creation of democracy", "Engineering of aqueducts"),
-                correctAnswer = mapOf(
-                    "Romans" to "Engineering of aqueducts",
-                    "Greeks" to "Creation of democracy",
-                    "Prehistoric Humans" to "Invention of the wheel"
-                ),
-                difficulty = Difficult.MEDIUM,
-                unitId = ancientHistoryId
-            ),
-
             // MULTIPLE_CHOICE - MEDIUM
             Question(
                 id = "q8history1",
@@ -106,21 +90,6 @@ class HistoryQuestions {
                 unitId = ancientHistoryId
             ),
 
-            // MATCHING - HARD
-            Question(
-                id = "q11history1",
-                questionText = "Match the term with its meaning.",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("Agora", "Patricians", "Legion"),
-                rightColumnOptions = listOf("Upper class in Roman society", "Public square in Greek cities", "Roman army unit"),
-                correctAnswer = mapOf(
-                    "Agora" to "Public square in Greek cities",
-                    "Patricians" to "Upper class in Roman society",
-                    "Legion" to "Roman army unit"
-                ),
-                difficulty = Difficult.HARD,
-                unitId = ancientHistoryId
-            ),
 
             // MULTIPLE_CHOICE - HARD
             Question(
@@ -221,22 +190,6 @@ class HistoryQuestions {
                 unitId = medievalRenaissanceId
             ),
 
-            // MATCHING - MEDIUM
-            Question(
-                id = "q7history2",
-                questionText = "Match each figure with their contribution to the Renaissance.",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("Leonardo da Vinci", "Michelangelo", "Giovanni Boccaccio"),
-                rightColumnOptions = listOf("Painter and scientist", "Sculptor and painter", "Writer and poet"),
-                correctAnswer = mapOf(
-                    "Leonardo da Vinci" to "Painter and scientist",
-                    "Michelangelo" to "Sculptor and painter",
-                    "Giovanni Boccaccio" to "Writer and poet"
-                ),
-                difficulty = Difficult.MEDIUM,
-                unitId = medievalRenaissanceId
-            ),
-
             // MULTIPLE_CHOICE - MEDIUM
             Question(
                 id = "q8history2",
@@ -265,22 +218,6 @@ class HistoryQuestions {
                 type = QuestionType.SHORT_ANSWER,
                 correctAnswer = "Brunelleschi",
                 difficulty = Difficult.MEDIUM,
-                unitId = medievalRenaissanceId
-            ),
-
-            // MATCHING - HARD
-            Question(
-                id = "q11history2",
-                questionText = "Match these events with the century in which they occurred.",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("Fall of Constantinople", "Renaissance", "Invention of the printing press"),
-                rightColumnOptions = listOf("14th century", "15th century", "16th century"),
-                correctAnswer = mapOf(
-                    "Fall of Constantinople" to "15th century",
-                    "Renaissance" to "16th century",
-                    "Invention of the printing press" to "15th century"
-                ),
-                difficulty = Difficult.HARD,
                 unitId = medievalRenaissanceId
             ),
 
@@ -385,22 +322,6 @@ class HistoryQuestions {
                 unitId = modernContemporaryId
             ),
 
-            // MATCHING - MEDIUM
-            Question(
-                id = "q7history3",
-                questionText = "Match the leader with the country they ruled during World War II.",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("Adolf Hitler", "Winston Churchill", "Franklin D. Roosevelt"),
-                rightColumnOptions = listOf("Germany", "United Kingdom", "United States"),
-                correctAnswer = mapOf(
-                    "Adolf Hitler" to "Germany",
-                    "Winston Churchill" to "United Kingdom",
-                    "Franklin D. Roosevelt" to "United States"
-                ),
-                difficulty = Difficult.MEDIUM,
-                unitId = modernContemporaryId
-            ),
-
             // MULTIPLE_CHOICE - MEDIUM
             Question(
                 id = "q8history3",
@@ -432,21 +353,6 @@ class HistoryQuestions {
                 unitId = modernContemporaryId
             ),
 
-            // MATCHING - HARD
-            Question(
-                id = "q11history3",
-                questionText = "Match these events with the year they occurred.",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("World War II ends", "The Cuban Missile Crisis", "The assassination of JFK"),
-                rightColumnOptions = listOf("1963", "1945", "1962"),
-                correctAnswer = mapOf(
-                    "World War II ends" to "1945",
-                    "The Cuban Missile Crisis" to "1962",
-                    "The assassination of JFK" to "1963"
-                ),
-                difficulty = Difficult.HARD,
-                unitId = modernContemporaryId
-            ),
 
             // MULTIPLE_CHOICE - HARD
             Question(

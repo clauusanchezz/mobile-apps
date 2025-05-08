@@ -236,14 +236,7 @@ fun QuestionCard(
                         question.id?.let { onAnswerSelected(it, answer) }
                     }
                 )
-                QuestionType.MATCHING -> MatchingQuestion(
-                    question = question,
-                    userAnswer = userAnswer,
-                    isAnswered = isAnswered,
-                    onAnswerSelected = { answer ->
-                        question.id?.let { onAnswerSelected(it, answer) }
-                    }
-                )
+
                 QuestionType.MAP -> MapQuestion(
                     question = question,
                     userAnswer = userAnswer,
@@ -443,17 +436,6 @@ fun ShortAnswerQuestion(
             }
         }
     }
-}
-
-@Composable
-fun MatchingQuestion(
-    question: Question,
-    userAnswer: String?,
-    isAnswered: Boolean,
-    onAnswerSelected: (String) -> Unit
-) {
-    // Implementation for matching questions
-    Text("Matching question type not implemented yet")
 }
 
 @Composable

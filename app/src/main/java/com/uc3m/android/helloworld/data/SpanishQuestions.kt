@@ -59,22 +59,6 @@ class SpanishQuestions {
                 id = "q6spanish1"
             ),
 
-            // MATCHING - MEDIUM
-            Question(
-                questionText = "Empareja los tipos de oraciones con su ejemplo.",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("Oración simple", "Oración compuesta", "Oración interrogativa", "Oración exclamativa"),
-                rightColumnOptions = listOf("¿Cómo estás?", "Me gusta leer.", "¡Qué bonito es el día!", "Juan y María estudian juntos."),
-                correctAnswer = mapOf(
-                    "Oración simple" to "Me gusta leer.",
-                    "Oración compuesta" to "Juan y María estudian juntos.",
-                    "Oración interrogativa" to "¿Cómo estás?",
-                    "Oración exclamativa" to "¡Qué bonito es el día!"
-                ),
-                difficulty = Difficult.MEDIUM,
-                unitId = grammarId,
-                id = "q7spanish1"
-            ),
 
             // MULTIPLE_CHOICE - MEDIUM
             Question(
@@ -107,22 +91,6 @@ class SpanishQuestions {
                 id = "q10spanish1"
             ),
 
-            // MATCHING - HARD
-            Question(
-                questionText = "Empareja los tiempos verbales con su forma correcta.",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("Presente perfecto", "Futuro simple", "Condicional", "Subjuntivo"),
-                rightColumnOptions = listOf("habrá estudiado", "estudiaría", "estudie", "he estudiado"),
-                correctAnswer = mapOf(
-                    "Presente perfecto" to "he estudiado",
-                    "Futuro simple" to "habrá estudiado",
-                    "Condicional" to "estudiaría",
-                    "Subjuntivo" to "estudie"
-                ),
-                difficulty = Difficult.HARD,
-                unitId = grammarId,
-                id = "q11spanish1"
-            ),
 
             // MULTIPLE_CHOICE - HARD
             Question(
@@ -225,22 +193,6 @@ class SpanishQuestions {
                 id = "q6spanish2"
             ),
 
-            // MATCHING - MEDIUM
-            Question(
-                questionText = "Empareja las figuras literarias con su definición.",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("Metáfora", "Antítesis", "Paradoja", "Anáfora"),
-                rightColumnOptions = listOf("Contraposición de dos ideas opuestas", "Repetición de una palabra al principio de las oraciones", "Comparación implícita entre dos elementos", "Ideas que se contradicen y se complementan"),
-                correctAnswer = mapOf(
-                    "Metáfora" to "Comparación implícita entre dos elementos",
-                    "Antítesis" to "Contraposición de dos ideas opuestas",
-                    "Paradoja" to "Ideas que se contradicen y se complementan",
-                    "Anáfora" to "Repetición de una palabra al principio de las oraciones"
-                ),
-                difficulty = Difficult.MEDIUM,
-                unitId = literaryGenresId,
-                id = "q7spanish2"
-            ),
 
             // MULTIPLE_CHOICE - MEDIUM
             Question(
@@ -271,23 +223,6 @@ class SpanishQuestions {
                 difficulty = Difficult.MEDIUM,
                 unitId = literaryGenresId,
                 id = "q10spanish2"
-            ),
-
-            // MATCHING - HARD
-            Question(
-                questionText = "Empareja los géneros literarios con su descripción.",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("Narrativo", "Lírico", "Dramático", "Didáctico"),
-                rightColumnOptions = listOf("Expone pensamientos y sentimientos del autor", "Se presenta en forma de diálogo y está pensado para ser representado", "Describe acciones de personajes y sucesos", "Busca enseñar o instruir"),
-                correctAnswer = mapOf(
-                    "Narrativo" to "Describe acciones de personajes y sucesos",
-                    "Lírico" to "Expone pensamientos y sentimientos del autor",
-                    "Dramático" to "Se presenta en forma de diálogo y está pensado para ser representado",
-                    "Didáctico" to "Busca enseñar o instruir"
-                ),
-                difficulty = Difficult.HARD,
-                unitId = literaryGenresId,
-                id = "q11spanish2"
             ),
 
             // MULTIPLE_CHOICE - HARD

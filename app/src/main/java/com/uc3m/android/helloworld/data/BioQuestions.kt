@@ -60,22 +60,6 @@ class BioQuestions {
                 unitId = cellFunctionsId
             ),
 
-            // MATCHING - MEDIUM
-            Question(
-                questionText = "Match the organelle with its function.",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("Ribosome", "Lysosome", "Nucleus", "Mitochondrion"),
-                rightColumnOptions = listOf("Protein synthesis", "Digestion of waste", "Genetic control center", "Energy production"),
-                correctAnswer = mapOf(
-                    "Ribosome" to "Protein synthesis",
-                    "Lysosome" to "Digestion of waste",
-                    "Nucleus" to "Genetic control center",
-                    "Mitochondrion" to "Energy production"
-                ),
-                difficulty = Difficult.MEDIUM,
-                id = "q17bio",
-                unitId = cellFunctionsId
-            ),
 
             // MULTIPLE_CHOICE - MEDIUM
             Question(
@@ -108,22 +92,6 @@ class BioQuestions {
                 unitId = cellFunctionsId
             ),
 
-            // MATCHING - HARD
-            Question(
-                questionText = "Match the structure with its location in the cell.",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("Rough Endoplasmic Reticulum", "Smooth Endoplasmic Reticulum", "Golgi Apparatus", "Vesicles"),
-                rightColumnOptions = listOf("Near the nucleus", "Near the plasma membrane", "Cytoplasm", "Near the nucleus"),
-                correctAnswer = mapOf(
-                    "Rough Endoplasmic Reticulum" to "Near the nucleus",
-                    "Smooth Endoplasmic Reticulum" to "Cytoplasm",
-                    "Golgi Apparatus" to "Near the plasma membrane",
-                    "Vesicles" to "Near the nucleus"
-                ),
-                difficulty = Difficult.HARD,
-                id = "q111bio",
-                unitId = cellFunctionsId
-            ),
 
             // MULTIPLE_CHOICE - HARD
             Question(
@@ -225,22 +193,6 @@ class BioQuestions {
                 id = "q6bio2"
             ),
 
-            // MATCHING - MEDIUM
-            Question(
-                questionText = "Match the system with its function.",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("Circulatory system", "Digestive system", "Nervous system", "Endocrine system"),
-                rightColumnOptions = listOf("Transports nutrients and oxygen", "Processes food and absorbs nutrients", "Coordinates body functions", "Secretes hormones to regulate body functions"),
-                correctAnswer = mapOf(
-                    "Circulatory system" to "Transports nutrients and oxygen",
-                    "Digestive system" to "Processes food and absorbs nutrients",
-                    "Nervous system" to "Coordinates body functions",
-                    "Endocrine system" to "Secretes hormones to regulate body functions"
-                ),
-                difficulty = Difficult.MEDIUM,
-                unitId = humanBodySystemsId,
-                id = "q7bio2"
-            ),
 
             // MULTIPLE_CHOICE - MEDIUM
             Question(
@@ -273,22 +225,6 @@ class BioQuestions {
                 id = "q10bio2"
             ),
 
-            // MATCHING - HARD
-            Question(
-                questionText = "Match the organ with its system.",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("Heart", "Lungs", "Kidneys", "Pancreas"),
-                rightColumnOptions = listOf("Circulatory system", "Respiratory system", "Excretory system", "Endocrine system"),
-                correctAnswer = mapOf(
-                    "Heart" to "Circulatory system",
-                    "Lungs" to "Respiratory system",
-                    "Kidneys" to "Excretory system",
-                    "Pancreas" to "Endocrine system"
-                ),
-                difficulty = Difficult.HARD,
-                unitId = humanBodySystemsId,
-                id = "q11bio2"
-            ),
 
             // MULTIPLE_CHOICE - HARD
             Question(
@@ -391,23 +327,6 @@ class BioQuestions {
                 id = "q6bio3"
             ),
 
-            // MATCHING - MEDIUM
-            Question(
-                questionText = "Match the terms with their correct description.",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("Dominant allele", "Recessive allele", "Homozygous", "Heterozygous"),
-                rightColumnOptions = listOf("Two identical alleles", "One dominant and one recessive allele", "Only expressed when two copies are present", "Expressed even when only one copy is present"),
-                correctAnswer = mapOf(
-                    "Dominant allele" to "Expressed even when only one copy is present",
-                    "Recessive allele" to "Only expressed when two copies are present",
-                    "Homozygous" to "Two identical alleles",
-                    "Heterozygous" to "One dominant and one recessive allele"
-                ),
-                difficulty = Difficult.MEDIUM,
-                unitId = geneticsEvolutionId,
-                id = "q7bio3"
-            ),
-
             // MULTIPLE_CHOICE - MEDIUM
             Question(
                 questionText = "Who is known as the father of modern genetics?",
@@ -437,23 +356,6 @@ class BioQuestions {
                 difficulty = Difficult.MEDIUM,
                 unitId = geneticsEvolutionId,
                 id = "q10bio3"
-            ),
-
-            // MATCHING - HARD
-            Question(
-                questionText = "Match the evolutionary mechanism with its definition.",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("Natural selection", "Gene flow", "Genetic drift", "Mutation"),
-                rightColumnOptions = listOf("Changes in allele frequency due to chance", "Movement of genes between populations", "Heritable changes that increase an organism's fitness", "Random changes in genetic material"),
-                correctAnswer = mapOf(
-                    "Natural selection" to "Heritable changes that increase an organism's fitness",
-                    "Gene flow" to "Movement of genes between populations",
-                    "Genetic drift" to "Changes in allele frequency due to chance",
-                    "Mutation" to "Random changes in genetic material"
-                ),
-                difficulty = Difficult.HARD,
-                unitId = geneticsEvolutionId,
-                id = "q11bio3"
             ),
 
             // MULTIPLE_CHOICE - HARD

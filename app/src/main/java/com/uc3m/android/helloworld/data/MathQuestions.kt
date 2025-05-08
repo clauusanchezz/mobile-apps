@@ -70,34 +70,7 @@ class MathQuestions {
                 difficulty = Difficult.MEDIUM,
                 unitId = algebraId
             ),
-            Question(
-                id = "q9maths1",
-                questionText = "Match the expression with its factored form:",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("x² - 4", "x² + 2x + 1", "x² - 6x + 9"),
-                rightColumnOptions = listOf("(x + 2)(x - 2)", "(x + 1)²", "(x - 3)²"),
-                correctAnswer = mapOf(
-                    "x² - 4" to "(x + 2)(x - 2)",
-                    "x² + 2x + 1" to "(x + 1)²",
-                    "x² - 6x + 9" to "(x - 3)²"
-                ),
-                difficulty = Difficult.HARD,
-                unitId = algebraId
-            ),
-            Question(
-                id = "q10maths1",
-                questionText = "Match each equation with its correct solution:",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("x² = 36", "x² - x = 0", "x² + 4x = 0"),
-                rightColumnOptions = listOf("x = ±6", "x = 0 or x = 1", "x = 0 or x = -4"),
-                correctAnswer = mapOf(
-                    "x² = 36" to "x = ±6",
-                    "x² - x = 0" to "x = 0 or x = 1",
-                    "x² + 4x = 0" to "x = 0 or x = -4"
-                ),
-                difficulty = Difficult.HARD,
-                unitId = algebraId
-            ),
+
             Question(
                 id = "q11maths1",
                 questionText = "What is the result of simplifying (x - 2)(x + 3)?",
@@ -205,42 +178,7 @@ class MathQuestions {
                 difficulty = Difficult.HARD,
                 unitId = geometryId
             ),
-            Question(
-                id = "q8maths2",
-                questionText = "Match the following geometric shapes with their properties:",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("Square", "Equilateral Triangle", "Circle"),
-                rightColumnOptions = listOf(
-                    "All sides equal, all angles 90°",
-                    "All sides equal, angles 60°",
-                    "Constant distance from center to perimeter"
-                ),
-                correctAnswer = mapOf(
-                    "Square" to "All sides equal, all angles 90°",
-                    "Equilateral Triangle" to "All sides equal, angles 60°",
-                    "Circle" to "Constant distance from center to perimeter"
-                ),
-                difficulty = Difficult.HARD,
-                unitId = geometryId
-            ),
-            Question(
-                id = "q9maths2",
-                questionText = "Match each quadrilateral with its properties:",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("Rectangle", "Rhombus", "Parallelogram"),
-                rightColumnOptions = listOf(
-                    "Opposite sides equal and parallel, angles 90°",
-                    "All sides equal, angles are not necessarily 90°",
-                    "Opposite sides equal and parallel, angles not necessarily 90°"
-                ),
-                correctAnswer = mapOf(
-                    "Rectangle" to "Opposite sides equal and parallel, angles 90°",
-                    "Rhombus" to "All sides equal, angles are not necessarily 90°",
-                    "Parallelogram" to "Opposite sides equal and parallel, angles not necessarily 90°"
-                ),
-                difficulty = Difficult.MEDIUM,
-                unitId = geometryId
-            ),
+
             Question(
                 id = "q10maths2",
                 questionText = "What is the surface area of a cube with side length 4 cm?",
@@ -347,38 +285,7 @@ class MathQuestions {
                 difficulty = Difficult.HARD,
                 unitId = functionsId
             ),
-            Question(
-                id = "q8maths6",
-                questionText = "Match the function to its correct transformation:",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("f(x) = x²", "f(x) = x + 2", "f(x) = √x"),
-                rightColumnOptions = listOf(
-                    "A parabola opening upwards",
-                    "A straight line with slope 1",
-                    "A square root curve"
-                ),
-                correctAnswer = mapOf(
-                    "f(x) = x²" to "A parabola opening upwards",
-                    "f(x) = x + 2" to "A straight line with slope 1",
-                    "f(x) = √x" to "A square root curve"
-                ),
-                difficulty = Difficult.HARD,
-                unitId = functionsId
-            ),
-            Question(
-                id = "q9maths6",
-                questionText = "Match the function with its graph type:",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("f(x) = x²", "f(x) = |x|", "f(x) = 3x"),
-                rightColumnOptions = listOf("Parabola", "V-shape", "Straight line"),
-                correctAnswer = mapOf(
-                    "f(x) = x²" to "Parabola",
-                    "f(x) = |x|" to "V-shape",
-                    "f(x) = 3x" to "Straight line"
-                ),
-                difficulty = Difficult.MEDIUM,
-                unitId = functionsId
-            ),
+
             Question(
                 id = "q10maths6",
                 questionText = "What is the range of the function f(x) = 1 / x?",
@@ -486,24 +393,7 @@ class MathQuestions {
                 difficulty = Difficult.HARD,
                 unitId = statsId
             ),
-            Question(
-                id = "q8maths3",
-                questionText = "Match the statistical terms to their definitions:",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("Mean", "Median", "Standard Deviation"),
-                rightColumnOptions = listOf(
-                    "Average of all values",
-                    "Middle value when sorted",
-                    "Measure of the spread of data"
-                ),
-                correctAnswer = mapOf(
-                    "Mean" to "Average of all values",
-                    "Median" to "Middle value when sorted",
-                    "Standard Deviation" to "Measure of the spread of data"
-                ),
-                difficulty = Difficult.HARD,
-                unitId = statsId
-            ),
+
             Question(
                 id = "q9maths3",
                 questionText = "What is the probability of drawing a red card from a deck of 52 cards?",
@@ -562,28 +452,6 @@ class MathQuestions {
                 difficulty = Difficult.HARD,
                 unitId = statsId
             ),
-            Question(
-                id = "q16maths3",
-                questionText = "Match the type of distribution to its characteristics:",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf(
-                    "Normal Distribution",
-                    "Uniform Distribution",
-                    "Binomial Distribution"
-                ),
-                rightColumnOptions = listOf(
-                    "Bell-shaped curve",
-                    "Equal probability for all outcomes",
-                    "Two possible outcomes with fixed probability"
-                ),
-                correctAnswer = mapOf(
-                    "Normal Distribution" to "Bell-shaped curve",
-                    "Uniform Distribution" to "Equal probability for all outcomes",
-                    "Binomial Distribution" to "Two possible outcomes with fixed probability"
-                ),
-                difficulty = Difficult.MEDIUM,
-                unitId = statsId
-            )
         )
     }
 
@@ -649,20 +517,6 @@ class MathQuestions {
                 unitId = trigId
             ),
             Question(
-                id = "q8maths4",
-                questionText = "Match the trigonometric ratios to their values for 30°:",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("sin(30°)", "cos(30°)", "tan(30°)"),
-                rightColumnOptions = listOf("1/2", "√3/2", "1/√3"),
-                correctAnswer = mapOf(
-                    "sin(30°)" to "1/2",
-                    "cos(30°)" to "√3/2",
-                    "tan(30°)" to "1/√3"
-                ),
-                difficulty = Difficult.HARD,
-                unitId = trigId
-            ),
-            Question(
                 id = "q9maths4",
                 questionText = "What is the value of tan(60°)?",
                 type = QuestionType.MULTIPLE_CHOICE,
@@ -712,20 +566,6 @@ class MathQuestions {
                 difficulty = Difficult.HARD,
                 unitId = trigId
             ),
-            Question(
-                id = "q15maths4",
-                questionText = "Match the angle to its trigonometric identity:",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("sin(90°)", "cos(0°)", "tan(45°)"),
-                rightColumnOptions = listOf("1", "1", "1"),
-                correctAnswer = mapOf(
-                    "sin(90°)" to "1",
-                    "cos(0°)" to "1",
-                    "tan(45°)" to "1"
-                ),
-                difficulty = Difficult.MEDIUM,
-                unitId = trigId
-            )
         )
     }
 
@@ -796,20 +636,7 @@ class MathQuestions {
                 difficulty = Difficult.HARD,
                 unitId = equationsId
             ),
-            Question(
-                id = "q9maths5",
-                questionText = "Match each equation with its solution:",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("3x + 6 = 12", "2x - 4 = 6", "5x = 25"),
-                rightColumnOptions = listOf("x = 2", "x = 5", "x = 10"),
-                correctAnswer = mapOf(
-                    "3x + 6 = 12" to "x = 2",
-                    "2x - 4 = 6" to "x = 5",
-                    "5x = 25" to "x = 5"
-                ),
-                difficulty = Difficult.HARD,
-                unitId = equationsId
-            ),
+
             Question(
                 id = "q10maths5",
                 questionText = "Solve for x: x + 3 = 2x + 1",
@@ -864,20 +691,6 @@ class MathQuestions {
                 type = QuestionType.SHORT_ANSWER,
                 correctAnswer = "x = 12",
                 difficulty = Difficult.EASY,
-                unitId = equationsId
-            ),
-            Question(
-                id = "q17maths5",
-                questionText = "Match the equation to its solution:",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("x + 4 = 9", "3x - 6 = 12", "2x = 10"),
-                rightColumnOptions = listOf("x = 5", "x = 3", "x = 5"),
-                correctAnswer = mapOf(
-                    "x + 4 = 9" to "x = 5",
-                    "3x - 6 = 12" to "x = 6",
-                    "2x = 10" to "x = 5"
-                ),
-                difficulty = Difficult.MEDIUM,
                 unitId = equationsId
             )
         )

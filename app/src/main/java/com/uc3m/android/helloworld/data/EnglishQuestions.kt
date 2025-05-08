@@ -59,23 +59,6 @@ class EnglishQuestions {
                 id = "q6english1"
             ),
 
-            // MATCHING - MEDIUM
-            Question(
-                questionText = "Match the tense with its use.",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("Present Simple", "Past Continuous", "Future Perfect", "Present Perfect"),
-                rightColumnOptions = listOf("An action that started in the past and continues to the present", "An action that will be completed before a certain future point", "An action that was happening at a particular moment in the past", "An action that happens regularly or is a general fact"),
-                correctAnswer = mapOf(
-                    "Present Simple" to "An action that happens regularly or is a general fact",
-                    "Past Continuous" to "An action that was happening at a particular moment in the past",
-                    "Future Perfect" to "An action that will be completed before a certain future point",
-                    "Present Perfect" to "An action that started in the past and continues to the present"
-                ),
-                difficulty = Difficult.MEDIUM,
-                unitId = englishGrammarId,
-                id = "q7english1"
-            ),
-
             // MULTIPLE_CHOICE - MEDIUM
             Question(
                 questionText = "Which of the following sentences is in the past perfect tense?",
@@ -105,23 +88,6 @@ class EnglishQuestions {
                 difficulty = Difficult.MEDIUM,
                 unitId = englishGrammarId,
                 id = "q10english1"
-            ),
-
-            // MATCHING - HARD
-            Question(
-                questionText = "Match the sentence with the correct verb tense.",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("I will have finished my homework.", "She was reading a book.", "I am studying English.", "He has lived here for five years."),
-                rightColumnOptions = listOf("Future Perfect", "Past Continuous", "Present Continuous", "Present Perfect"),
-                correctAnswer = mapOf(
-                    "I will have finished my homework." to "Future Perfect",
-                    "She was reading a book." to "Past Continuous",
-                    "I am studying English." to "Present Continuous",
-                    "He has lived here for five years." to "Present Perfect"
-                ),
-                difficulty = Difficult.HARD,
-                unitId = englishGrammarId,
-                id = "q11english1"
             ),
 
             // MULTIPLE_CHOICE - HARD
@@ -225,22 +191,6 @@ class EnglishQuestions {
                 unitId = englishVocabId
             ),
 
-            // MATCHING - MEDIUM
-            Question(
-                questionText = "Match the word with its correct meaning.",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("generous", "reliable", "optimistic", "pessimistic"),
-                rightColumnOptions = listOf("always hopeful about the future", "always negative about the future", "willing to give and share", "able to be trusted"),
-                correctAnswer = mapOf(
-                    "generous" to "willing to give and share",
-                    "reliable" to "able to be trusted",
-                    "optimistic" to "always hopeful about the future",
-                    "pessimistic" to "always negative about the future"
-                ),
-                difficulty = Difficult.MEDIUM,
-                id = "q7english2",
-                unitId = englishVocabId
-            ),
 
             // MULTIPLE_CHOICE - MEDIUM
             Question(
@@ -273,22 +223,6 @@ class EnglishQuestions {
                 unitId = englishVocabId
             ),
 
-            // MATCHING - HARD
-            Question(
-                questionText = "Match the phrase with its meaning.",
-                type = QuestionType.MATCHING,
-                leftColumnOptions = listOf("Break the ice", "Get the ball rolling", "Bite the bullet", "Burn the midnight oil"),
-                rightColumnOptions = listOf("Start something", "Work late into the night", "Do something difficult or unpleasant", "Make people feel comfortable"),
-                correctAnswer = mapOf(
-                    "Break the ice" to "Make people feel comfortable",
-                    "Get the ball rolling" to "Start something",
-                    "Bite the bullet" to "Do something difficult or unpleasant",
-                    "Burn the midnight oil" to "Work late into the night"
-                ),
-                difficulty = Difficult.HARD,
-                id = "q11english2",
-                unitId = englishVocabId
-            ),
 
             // MULTIPLE_CHOICE - HARD
             Question(
