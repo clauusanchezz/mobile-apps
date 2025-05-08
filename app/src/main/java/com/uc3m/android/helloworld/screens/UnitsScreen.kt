@@ -48,9 +48,22 @@ fun UnitScreen(
     val darkGray = Color(0xFF333333)
     val cardBackground = Color(0xFFF8F8F8)
 
+    // Function to get proper display name
+    fun getDisplayName(id: String): String {
+        return when (id) {
+            "maths" -> "Mathematics"
+            "science" -> "Science"
+            "geo" -> "Geography"
+            "history" -> "History"
+            "bio" -> "Biology"
+            "spanish" -> "Spanish"
+            "english" -> "English"
+            else -> id
+        }
+    }
+
     // Observe units from ViewModel
     val units by viewModel.units.observeAsState(emptyList())
-
 
     // Start real-time listening as soon as subjectId changes
     LaunchedEffect(subjectId) {
@@ -61,16 +74,9 @@ fun UnitScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    // Optional: look up the display name
-                    val displayName = viewModel.subjects
-                        .observeAsState(emptyList())
-                        .value
-                        .find { it.id == subjectId }
-                        ?.name
-                        ?: subjectId
                     Column {
                         Text(
-                            text = displayName,
+                            text = getDisplayName(subjectId),
                             fontSize = 28.sp,
                             fontWeight = FontWeight.Bold,
                             color = white
@@ -109,59 +115,19 @@ fun UnitScreen(
                     .padding(horizontal = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Progress overview card
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 16.dp),
-                    colors = CardDefaults.cardColors(containerColor = white),
-                    shape = RoundedCornerShape(16.dp)
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "Your Progress",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = darkGray
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        LinearProgressIndicator(
-                            progress = 0.3f, // TODO: Implement actual progress tracking
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(8.dp)
-                                .clip(RoundedCornerShape(4.dp)),
-                            color = orange,
-                            trackColor = lightGray
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = "30% Complete",
-                            fontSize = 14.sp,
-                            color = darkGray.copy(alpha = 0.7f)
-                        )
-                    }
-                }
-
                 // Units list
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
-                    contentPadding = PaddingValues(bottom = 16.dp)
+                    contentPadding = PaddingValues(vertical = 16.dp)
                 ) {
-                    items(units) { unit -> // new
+                    items(units) { unit ->
                         UnitCard(
                             unit = unit,
                             onClick = {
                                 navController.navigate("questions_screen/${subjectId}/${unit.id}")
                             }
                         )
-
                     }
                 }
             }
