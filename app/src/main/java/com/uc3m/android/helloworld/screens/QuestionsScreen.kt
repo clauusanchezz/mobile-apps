@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.uc3m.android.helloworld.data.Question
 import com.uc3m.android.helloworld.viewmodel.DataBaseViewModel
+import com.uc3m.android.helloworld.screens.MapQuizScreen
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.uc3m.android.helloworld.data.QuestionType
@@ -30,6 +31,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.foundation.lazy.itemsIndexed
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,17 +41,16 @@ fun QuestionsScreen(
     navController: NavController,
     viewModel: DataBaseViewModel = viewModel()
 ) {
+    // theme colors
     val orange = Color(0xFFFF9966)
-    val white = Color.White
-    val lightOrange = Color(0xFFFFE5D9)
-    val green = Color(0xFF4CAF50)
-    val red = Color(0xFFF44336)
+    val white  = Color.White
+    val lightBg = Color(0xFFFFE5D9)
 
-    // observe only the 5 random questions we load once
+    // load exactly five random questions once
     val questions by viewModel.randomQuestions.observeAsState(emptyList())
-    val currentQuestionIndex = remember { mutableStateOf(0) }
-    val answeredQuestions = remember { mutableStateMapOf<String, String>() }
-    val hasAnsweredAnyQuestion = remember { derivedStateOf { answeredQuestions.isNotEmpty() } }
+    var currentIndex by remember { mutableStateOf(0) }
+    val answers = remember { mutableStateMapOf<String, String>() }
+    val anyAnswered by remember { derivedStateOf { answers.isNotEmpty() } }
 
     LaunchedEffect(subjectId, unitId) {
         viewModel.loadRandomQuestions(subjectId, unitId)
@@ -58,24 +59,16 @@ fun QuestionsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = {
-                    Text(
-                        text = "Practice Questions",
-                        fontSize = 28.sp,
-                        color = white
-                    )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = orange
-                )
+                title = { Text("Practice Questions", fontSize = 28.sp, color = white) },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = orange)
             )
         }
-    ) { paddingValues ->
+    ) { padding ->
         Surface(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues),
-            color = lightOrange
+                .padding(padding),
+            color = lightBg
         ) {
             LazyColumn(
                 modifier = Modifier
@@ -83,53 +76,53 @@ fun QuestionsScreen(
                     .padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Show all questions up to the current one
-                items(questions.take(currentQuestionIndex.value + 1)) { question ->
-                    QuestionCard(
-                        question = question,
-                        questionNumber = questions.indexOf(question) + 1,
-                        answeredQuestions = answeredQuestions,
-                        onAnswerSelected = { questionId, answer ->
-                            answeredQuestions[questionId] = answer
-                            // Move to next question after a short delay
-                            if (currentQuestionIndex.value < questions.size - 1) {
-                                currentQuestionIndex.value++
+                itemsIndexed(questions.take(currentIndex + 1)) { idx, question ->
+                    if (question.type == QuestionType.MAP) {
+                        // Map question
+                        MapQuizScreen(
+                            question    = question,
+                            onRegionTapped = { tappedName ->
+                                // record answer
+                                question.id?.let { answers[it] = tappedName }
+                                // advance or finish
+                                if (idx < questions.lastIndex) {
+                                    currentIndex = idx + 1
+                                } else {
+                                    finishQuiz(questions, answers, subjectId, navController, viewModel)
+                                }
                             }
-                        }
-                    )
+                        )
+                    } else {
+                        // regular question card
+                        QuestionCard(
+                            question           = question,
+                            questionNumber     = idx + 1,
+                            userAnswers        = answers,
+                            onAnswerSelected   = { qid, answer ->
+                                answers[qid] = answer
+                                if (idx < questions.lastIndex) {
+                                    currentIndex = idx + 1
+                                }
+                            }
+                        )
+                    }
                 }
 
+                // final “View Results” button for non-map last question
                 item {
-                    Spacer(modifier = Modifier.height(16.dp))
-                    if (currentQuestionIndex.value == questions.size - 1 && hasAnsweredAnyQuestion.value) {
+                    if (currentIndex == questions.lastIndex && anyAnswered) {
+                        Spacer(Modifier.height(16.dp))
                         Button(
                             onClick = {
-                                val score = calculateScore(questions, answeredQuestions)
-                                val correctAnswers = answeredQuestions.count { (questionId, answer) ->
-                                    val question = questions.find { it.id == questionId }
-                                    when (question?.type) {
-                                        QuestionType.SHORT_ANSWER, QuestionType.TRUE_FALSE -> 
-                                            answer.toString().toLowerCase() == question.correctAnswer?.toString()?.toLowerCase()
-                                        else -> answer == question?.correctAnswer
-                                    }
-                                }
-                                // Mark the test as completed in the HomeScreen
-                                viewModel.markTestAsCompleted(subjectId)
-                                navController.navigate("results/${score.toInt()}/$subjectId/$correctAnswers/${questions.size}")
+                                finishQuiz(questions, answers, subjectId, navController, viewModel)
                             },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(vertical = 16.dp),
                             shape = RoundedCornerShape(50),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = orange
-                            )
+                            colors = ButtonDefaults.buttonColors(containerColor = orange)
                         ) {
-                            Text(
-                                "View Results",
-                                fontSize = 18.sp,
-                                color = white
-                            )
+                            Text("View Results", color = white)
                         }
                     }
                 }
@@ -138,39 +131,36 @@ fun QuestionsScreen(
     }
 }
 
-private fun calculateScore(questions: List<Question>, answeredQuestions: Map<String, String>): Float {
-    var correctAnswers = 0
-    questions.forEach { question ->
-        val userAnswer = answeredQuestions[question.id]
-        val isCorrect = when (question.type) {
-            QuestionType.SHORT_ANSWER, QuestionType.TRUE_FALSE -> {
-                if (userAnswer == null || question.correctAnswer == null) false
-                else userAnswer.toString().toLowerCase() == question.correctAnswer.toString().toLowerCase()
-            }
-            else -> userAnswer == question.correctAnswer
-        }
-        if (isCorrect) {
-            correctAnswers++
-        }
+private fun finishQuiz(
+    questions: List<Question>,
+    answers: Map<String,String>,
+    subjectId: String,
+    navController: NavController,
+    viewModel: DataBaseViewModel
+) {
+    // compute percent score
+    val correct = answers.count { (qid, ans) ->
+        questions.find { it.id == qid }?.correctAnswer.toString() == ans
     }
-    return (correctAnswers.toFloat() / questions.size) * 100
+    val pct = (correct.toFloat() / questions.size * 100).toInt()
+    viewModel.markTestAsCompleted(subjectId)
+    navController.navigate("results/$pct/$subjectId/$correct/${questions.size}")
 }
 
 @Composable
 fun QuestionCard(
     question: Question,
     questionNumber: Int,
-    answeredQuestions: MutableMap<String, String>,
+    userAnswers: Map<String, String>,
     onAnswerSelected: (String, String) -> Unit
 ) {
-    val userAnswer = question.id?.let { answeredQuestions[it] }
+    val userAnswer = question.id?.let { userAnswers[it] }
     val isAnswered = userAnswer != null
     val isCorrect = when (question.type) {
-        QuestionType.SHORT_ANSWER, QuestionType.TRUE_FALSE -> {
-            if (userAnswer == null || question.correctAnswer == null) false
-            else userAnswer.toString().toLowerCase() == question.correctAnswer.toString().toLowerCase()
-        }
-        else -> userAnswer == question.correctAnswer
+        QuestionType.SHORT_ANSWER, QuestionType.TRUE_FALSE ->
+            userAnswer?.equals(question.correctAnswer.toString(), ignoreCase = true) == true
+        else ->
+            userAnswer == question.correctAnswer
     }
 
     Card(
@@ -178,95 +168,62 @@ fun QuestionCard(
             .fillMaxWidth()
             .padding(vertical = 8.dp),
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFFFFF5EC)
-        )
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF5EC))
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Text(
-                text = "Question $questionNumber",
-                style = TextStyle(
-                    fontSize = 16.sp,
-                    color = Color.Gray,
-                    fontWeight = FontWeight.Medium
-                ),
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-            Text(
-                text = question.questionText,
-                style = TextStyle(
-                    fontSize = 18.sp,
-                    color = Color.Black,
-                    fontWeight = FontWeight.Medium
-                ),
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text("Question $questionNumber",
+                style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Medium))
+            Spacer(Modifier.height(8.dp))
+            Text(question.questionText,
+                style = MaterialTheme.typography.bodyLarge)
+            Spacer(Modifier.height(16.dp))
 
             when (question.type) {
                 QuestionType.MULTIPLE_CHOICE -> MultipleChoiceQuestion(
-                    question = question,
-                    userAnswer = userAnswer,
-                    isAnswered = isAnswered,
-                    onAnswerSelected = { answer ->
-                        question.id?.let { onAnswerSelected(it, answer) }
-                    }
+                    question        = question,
+                    userAnswer      = userAnswer,
+                    isAnswered      = isAnswered,
+                    onAnswerSelected = { onAnswerSelected(question.id!!, it) }
                 )
                 QuestionType.TRUE_FALSE -> TrueFalseQuestion(
-                    question = question,
-                    userAnswer = userAnswer,
-                    isAnswered = isAnswered,
-                    onAnswerSelected = { answer ->
-                        question.id?.let { onAnswerSelected(it, answer) }
-                    }
+                    question        = question,
+                    userAnswer      = userAnswer,
+                    isAnswered      = isAnswered,
+                    onAnswerSelected = { onAnswerSelected(question.id!!, it) }
                 )
                 QuestionType.SHORT_ANSWER -> ShortAnswerQuestion(
-                    question = question,
-                    userAnswer = userAnswer,
-                    isAnswered = isAnswered,
-                    onAnswerSelected = { answer ->
-                        question.id?.let { onAnswerSelected(it, answer) }
-                    }
+                    question        = question,
+                    userAnswer      = userAnswer,
+                    isAnswered      = isAnswered,
+                    onAnswerSelected = { onAnswerSelected(question.id!!, it) }
                 )
                 QuestionType.MATCHING -> MatchingQuestion(
-                    question = question,
-                    userAnswer = userAnswer,
-                    isAnswered = isAnswered,
-                    onAnswerSelected = { answer ->
-                        question.id?.let { onAnswerSelected(it, answer) }
-                    }
+                    question        = question,
+                    userAnswer      = userAnswer,
+                    isAnswered      = isAnswered,
+                    onAnswerSelected = { onAnswerSelected(question.id!!, it) }
                 )
+                else -> { /* MAP is handled above */ }
             }
 
-            // Show feedback after answering
             if (isAnswered) {
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(Modifier.height(16.dp))
                 Card(
-                    modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(
                         containerColor = if (isCorrect) Color(0xFFE8F5E9) else Color(0xFFFFEBEE)
                     ),
                     shape = RoundedCornerShape(8.dp)
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp)
-                    ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
                         Text(
                             text = if (isCorrect) "Correct!" else "Incorrect",
-                            color = if (isCorrect) Color(0xFF2E7D32) else Color(0xFFC62828),
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            color = if (isCorrect) Color(0xFF2E7D32) else Color(0xFFC62828)
                         )
                         if (!isCorrect) {
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = "Correct answer: ${question.correctAnswer}",
-                                color = Color(0xFF2E7D32)
-                            )
+                            Spacer(Modifier.height(8.dp))
+                            Text("Answer: ${question.correctAnswer}",
+                                color = Color(0xFF2E7D32))
                         }
                     }
                 }
@@ -274,7 +231,6 @@ fun QuestionCard(
         }
     }
 }
-
 @Composable
 fun MultipleChoiceQuestion(
     question: Question,

@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace 'com.uc3m.android.helloworld'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.uc3m.android.helloworld"
         minSdk 24
-        targetSdk 34
+        targetSdk 35
         versionCode 1
         versionName "1.0"
 
@@ -19,6 +19,10 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+
+        // For MAPS
+        def mapsKey = project.findProperty("MAPS_API_KEY") ?: ""
+        manifestPlaceholders = [ MAPS_API_KEY: mapsKey ]
     }
 
     buildTypes {
@@ -40,7 +44,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.4.3'
+        kotlinCompilerExtensionVersion '1.5.0'
     }
     packaging {
         resources {
@@ -51,13 +55,15 @@ android {
 
 dependencies {
     implementation 'androidx.core:core-ktx:1.12.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.7.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.2'
     implementation 'androidx.activity:activity-compose:1.8.2'
     implementation platform('androidx.compose:compose-bom:2023.08.00')
     implementation 'androidx.compose.ui:ui'
     implementation 'androidx.compose.ui:ui-graphics'
     implementation 'androidx.compose.ui:ui-tooling-preview'
     implementation 'androidx.compose.material3:material3'
+    implementation "androidx.compose.animation:animation"
+    implementation "androidx.compose.foundation:foundation"
     implementation 'androidx.compose.runtime:runtime-livedata'
     implementation 'androidx.navigation:navigation-compose:2.7.7'
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose"
@@ -80,6 +86,20 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth-ktx'
     implementation 'com.google.firebase:firebase-firestore-ktx'
     implementation libs.firebase.firestore
+
+    // Maps Compose
+    // Core Compose-friendly Maps support
+    implementation "com.google.maps.android:maps-ktx:5.1.1"
+    // The official Play Services Maps SDK
+    implementation "com.google.android.gms:play-services-maps:18.1.0"
+    // The “Utils” library with KTX wrappers
+    implementation "com.google.maps.android:maps-utils-ktx:1.2.0"
+    // Maps Utils Android (para GeoJsonLayer, PolylineEncoding, etc)
+    implementation "com.google.maps.android:android-maps-utils:2.3.0"
+    // Lifecycle + Compose (para LocalLifecycleOwner y LifecycleEventObserver en Compose)
+    implementation "androidx.lifecycle:lifecycle-runtime-compose:2.8.2"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.8.2"
+
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

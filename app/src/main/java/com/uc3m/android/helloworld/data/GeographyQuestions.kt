@@ -491,5 +491,197 @@ class GeographyQuestions {
             )
         )
     }
+    fun generateSpanishAutonomousCommunitiesMapQuestions(spanishCommunitiesId: String): List<Question> {
+        // Names that coincide with "NAME_1" of spain_communities.geojson
+        val communities = listOf(
+            "Andalucía",
+            "Aragón",
+            "Cantabria",
+            "Castilla-LaMancha",
+            "CastillayLeón",
+            "Cataluña",
+            "CeutayMelilla",
+            "ComunidaddeMadrid",
+            "ComunidadForaldeNavarra",
+            "ComunidadValenciana",
+            "Extremadura",
+            "Galicia",
+            "IslasBaleares",
+            "IslasCanarias",
+            "LaRioja",
+            "PaísVasco",
+            "PrincipadodeAsturias",
+            "RegióndeMurcia"
+        )
+        return communities.mapIndexed { index, name ->
+            Question(
+                questionText   = "Tap the autonomous community of $name",
+                type           = QuestionType.MAP,
+                correctAnswer  = name,
+                unitId         = spanishCommunitiesId,
+                geoJsonAsset   = "spain_communities.geojson",
+                regionProperty = "NAME_1",
+                id = "q${index + 1}geo4"
+            )
+        }
+    }
 
+    fun generateSpanishProvincesMapQuestions(spanishProvincesId: String): List<Question> {
+        // Los nombres deben coincidir exactamente con la propiedad NAME_2 de spain_provincias.geojson
+        val provinces = listOf(
+            "Álava",
+            "Albacete",
+            "Alicante",
+            "Almería",
+            "Asturias",
+            "Ávila",
+            "Badajoz",
+            "Baleares",
+            "Barcelona",
+            "Burgos",
+            "Cáceres",
+            "Cádiz",
+            "Cantabria",
+            "Castellón",
+            "CiudadReal",
+            "Córdoba",
+            "Coruña",
+            "Cuenca",
+            "Girona",
+            "Granada",
+            "Guadalajara",
+            "Guipúzcoa",
+            "Huelva",
+            "Huesca",
+            "Jaén",
+            "LaRioja",
+            "LasPalmas",
+            "León",
+            "Lleida",
+            "Lugo",
+            "Madrid",
+            "Málaga",
+            "Murcia",
+            "Navarra",
+            "Ourense",
+            "Palencia",
+            "Pontevedra",
+            "Salamanca",
+            "SantaCruzdeTenerife",
+            "Segovia",
+            "Sevilla",
+            "Soria",
+            "Tarragona",
+            "Teruel",
+            "Toledo",
+            "Valencia",
+            "Valladolid",
+            "Vizcaya",
+            "Zamora",
+            "Zaragoza"
+        )
+
+        val provinceQuestions = provinces.mapIndexed { index, name ->
+            Question(
+                questionText   = "Tap the Spanish province of $name",
+                type           = QuestionType.MAP,
+                correctAnswer  = name,
+                unitId         = spanishProvincesId,
+                geoJsonAsset   = "spain_provincias.geojson",
+                regionProperty = "NAME_2",
+                id             = "q${index + 1}_prov"
+            )
+        }
+
+        // 2) Preguntas de “provincia capital” para 6 comunidades
+        val communityCapitals = mapOf(
+            "Andalusia"           to "Sevilla",
+            "Catalonia"           to "Barcelona",
+            "Community of Madrid" to "Madrid",
+            "Castile–La Mancha"   to "Toledo",
+            "Castile and León"    to "Valladolid",
+            "Valencian Community" to "Valencia"
+        )
+
+        val startIdx = provinceQuestions.size
+        // Convert into list to be able to use mapIndexed
+        val capitalQuestions = communityCapitals
+            .toList()  // List<Pair<String,String>>
+            .mapIndexed { idx, (community, provinceName) ->Question(
+                questionText   = "Tap the province that is the capital of $community",
+                type           = QuestionType.MAP,
+                correctAnswer  = provinceName,
+                unitId         = spanishProvincesId,
+                geoJsonAsset   = "spain_provincias.geojson",
+                regionProperty = "NAME_2",
+                difficulty     = Difficult.HARD,
+                id             = "q${startIdx + idx + 1}_cap"
+            )
+        }
+
+        return provinceQuestions + capitalQuestions
+    }
+
+
+    fun generateEuropeMapQuestions(europeId: String): List<Question> {
+        // 1) Lista de países tal cual aparecen en europe.geojson → properties.name
+        val countries = listOf(
+            "Albania", "Austria", "Belarus", "Belgium", "Bosnia and Herz.",
+            "Bulgaria", "Croatia", "Czechia", "Denmark", "Estonia",
+            "Finland", "France", "Germany", "Greece", "Hungary",
+            "Iceland", "Ireland", "Italy", "Kosovo", "Latvia",
+            "Liechtenstein", "Lithuania", "Luxembourg", "Malta", "Moldova",
+            "Monaco", "Montenegro", "Netherlands", "North Macedonia", "Norway",
+            "Poland", "Portugal", "Romania", "Russia", "Serbia",
+            "Slovakia", "Slovenia", "Spain", "Sweden", "Switzerland",
+            "Ukraine", "United Kingdom"
+        )
+
+        // 2) Mapa capital → país
+        val capitalToCountry = mapOf(
+            "Tirana"           to "Albania",
+            "Vienna"           to "Austria",
+            "Brussels"         to "Belgium",
+            "Paris"            to "France",
+            "Berlin"           to "Germany",
+            "Rome"             to "Italy",
+            "Madrid"           to "Spain",
+            "Lisbon"           to "Portugal",
+            "Warsaw"           to "Poland",
+            "Athens"           to "Greece",
+            "Copenhagen"       to "Denmark",
+            "Budapest"         to "Hungary"
+        )
+
+        // Generación de preguntas “Tap the country of X”
+        val countryQuestions = countries.mapIndexed { idx, country ->
+            Question(
+                questionText   = "Tap the country of $country",
+                type           = QuestionType.MAP,
+                correctAnswer  = country,
+                unitId         = europeId,
+                geoJsonAsset   = "europe.geojson",
+                regionProperty = "name",
+                difficulty     = Difficult.MEDIUM,
+                id             = "q${idx + 1}eur_map"
+            )
+        }
+
+        // Generación de preguntas “Tap the country whose capital is Y”
+        val capitalQuestions = capitalToCountry.entries.mapIndexed { idx, (capital, country) ->
+            Question(
+                questionText   = "Tap the country whose capital is $capital",
+                type           = QuestionType.MAP,
+                correctAnswer  = country,
+                unitId         = europeId,
+                geoJsonAsset   = "europe.geojson",
+                regionProperty = "name",
+                difficulty     = Difficult.HARD,
+                // Continuamos la numeración después de countries.size
+                id             = "q${countries.size + idx + 1}eur_cap"
+            )
+        }
+
+        return countryQuestions + capitalQuestions
+    }
 }
